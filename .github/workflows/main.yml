@@ -11,6 +11,9 @@ jobs:
       - name: Get code
         uses: actions/checkout@v4
 
+      - name: Install libraries
+        run: pip install gTTS requests
+
       - name: Run English Radar
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
