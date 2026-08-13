@@ -13,14 +13,16 @@ def telegram(method, data=None):
         data = urllib.parse.urlencode(data).encode()
 
     request = urllib.request.Request(url, data=data)
+
     with urllib.request.urlopen(request) as response:
         return json.loads(response.read().decode())
 
 
-# Получаем последние сообщения боту
+# Проверяем работу бота
 updates = telegram("getUpdates")
 
 for update in updates.get("result", []):
+
     message = update.get("message")
 
     if not message:
@@ -30,18 +32,19 @@ for update in updates.get("result", []):
     text = message.get("text", "")
 
     if text.startswith("/start"):
+
         telegram(
             "sendMessage",
             {
                 "chat_id": chat_id,
                 "text": (
                     "🇬🇧 ENGLISH RADAR\n\n"
-                    "Бот запущен!\n\n"
-                    "Сегодня начинаем с первого слова:\n\n"
-                    "🔊 ROAD\n"
-                    "дорога\n\n"
-                    "ROAD — дорога\n\n"
-                    "Скоро начнём повторения."
+                    "🚛 Урок 1 — Дорога\n\n"
+                    "Сегодня изучаем 3 слова:\n\n"
+                    "ROAD — дорога\n"
+                    "SLIPPERY — скользкий\n"
+                    "DELAY — задержка\n\n"
+                    "Скоро начинаем повторение."
                 ),
             },
         )
