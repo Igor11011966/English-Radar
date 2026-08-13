@@ -2,6 +2,10 @@ import os
 import json
 import urllib.request
 import urllib.parse
+import requests
+
+from gtts import gTTS
+
 
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
 
@@ -18,7 +22,51 @@ def telegram(method, data=None):
         return json.loads(response.read().decode())
 
 
-# Проверяем работу бота
+def make_audio():
+    phrases = []
+
+    words = [
+        ("ROAD", "дорога"),
+        ("SLIPPERY", "скользкий"),
+        ("DELAY", "задержка"),
+    ]
+
+    for english, russian in words:
+
+        for i in range(10):
+            phrases.append(english)
+            phrases.append(russian)
+
+    text = ". ".join(phrases)
+
+    tts = gTTS(
+        text=text,
+        lang="en"
+    )
+
+    tts.save("lesson1.mp3")
+
+
+def send_audio(chat_id):
+
+    url = f"https://api.telegram.org/bot{TOKEN}/sendAudio"
+
+    with open("lesson1.mp3", "rb") as audio:
+
+        response = requests.post(
+            url,
+            data={
+                "chat_id": chat_id,
+                "caption": "🎧 English Radar — урок 1\n\nROAD • SLIPPERY • DELAY"
+            },
+            files={
+                "audio": ("lesson1.mp3", audio, "audio/mpeg")
+            }
+        )
+
+    print(response.text)
+
+
 updates = telegram("getUpdates")
 
 for update in updates.get("result", []):
@@ -39,14 +87,17 @@ for update in updates.get("result", []):
                 "chat_id": chat_id,
                 "text": (
                     "🇬🇧 ENGLISH RADAR\n\n"
-                    "🚛 Урок 1 — Дорога\n\n"
-                    "Сегодня изучаем 3 слова:\n\n"
+                    "🎓 Урок 1 — Дорога\n\n"
+                    "Сегодня изучаем:\n\n"
                     "ROAD — дорога\n"
                     "SLIPPERY — скользкий\n"
                     "DELAY — задержка\n\n"
-                    "Скоро начинаем повторение."
+                    "🎧 Сейчас подготовлю аудио."
                 ),
             },
         )
+
+        make_audio()
+        send_audio(chat_id)
 
 print("English Radar работает.")
