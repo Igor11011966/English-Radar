@@ -3,7 +3,7 @@ import json
 import urllib.request
 import urllib.parse
 
-TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
+TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]. strip():
 
 
 def telegram(method, data=None):
