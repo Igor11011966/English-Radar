@@ -234,9 +234,30 @@ def send_audio(chat_id, filename, caption):
 # 08:00 — НОВЫЕ СЛОВА
 # --------------------------------------------------
 
-def lesson_morning(progress):
+def run_lesson(progress):
 
-    words = get_new_words(progress)
+    now = datetime.now(ZoneInfo("Europe/Kyiv"))
+    hour = now.hour
+
+    print("Kyiv time:", now.strftime("%Y-%m-%d %H:%M:%S"))
+
+    if hour == 8:
+        lesson_morning(progress)
+
+    elif hour == 10:
+        lesson_combinations(progress)
+
+    elif hour == 12:
+        lesson_sentence(progress)
+
+    elif hour == 14:
+        lesson_recall(progress)
+
+    elif hour == 16:
+        lesson_explain(progress)
+
+    else:
+        print("Сейчас учебного этапа нет.")
 
     if not words:
         return
