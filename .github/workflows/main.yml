@@ -3,6 +3,13 @@ name: English Radar
 on:
   workflow_dispatch:
 
+  schedule:
+    - cron: "0 5 * * *"
+    - cron: "0 7 * * *"
+    - cron: "0 9 * * *"
+    - cron: "0 11 * * *"
+    - cron: "0 13 * * *"
+
 jobs:
   run:
     runs-on: ubuntu-latest
