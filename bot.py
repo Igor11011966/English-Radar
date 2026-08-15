@@ -483,7 +483,7 @@ for update in updates.get("result", []):
 
 if progress.get("chat_id"):
 
-    lesson_morning(progress)
+    run_lesson(progress)
 
 else:
 
