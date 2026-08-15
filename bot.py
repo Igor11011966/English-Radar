@@ -1,5 +1,6 @@
 import os
 import json
+import asyncio
 import urllib.request
 import urllib.parse
 import requests
@@ -7,20 +8,23 @@ import tempfile
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from gtts import gTTS
+import edge_tts
 from pydub import AudioSegment
 
 
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
 
-PROGRESS_FILE = "progress.json"
+KYIV = ZoneInfo("Europe/Kyiv")
+
+CHAT_FILE = "chat_id.txt"
 
 
-# --------------------------------------------------
+# ==================================================
 # TELEGRAM
-# --------------------------------------------------
+# ==================================================
 
 def telegram(method, data=None):
+
     url = f"https://api.telegram.org/bot{TOKEN}/{method}"
 
     if data:
@@ -32,163 +36,307 @@ def telegram(method, data=None):
         return json.loads(response.read().decode())
 
 
-# --------------------------------------------------
-# ПАМЯТЬ ПРОГРАММЫ
-# --------------------------------------------------
+# ==================================================
+# СОХРАНЯЕМ CHAT ID
+# ==================================================
 
-def load_progress():
+def save_chat_id(chat_id):
 
-    if not os.path.exists(PROGRESS_FILE):
-
-        return {
-            "chat_id": None,
-            "day": 1,
-            "words": [],
-            "learned": [],
-            "date": ""
-        }
-
-    with open(PROGRESS_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+    with open(CHAT_FILE, "w") as file:
+        file.write(str(chat_id))
 
 
-def save_progress(progress):
+def get_chat_id():
 
-    with open(PROGRESS_FILE, "w", encoding="utf-8") as file:
-        json.dump(
-            progress,
-            file,
-            ensure_ascii=False,
-            indent=2
+    if os.path.exists(CHAT_FILE):
+
+        with open(CHAT_FILE, "r") as file:
+            value = file.read().strip()
+
+            if value:
+                return value
+
+    return None
+
+
+# ==================================================
+# АССОЦИАЦИИ
+# ==================================================
+
+WORDS = [
+
+    {
+        "english": "ROAD",
+        "russian": "дорога",
+        "association": (
+            "Представь дорогу прямо перед собой. "
+            "Ты едешь по дороге на грузовике."
         )
+    },
 
+    {
+        "english": "SLIPPERY",
+        "russian": "скользкий",
+        "association": (
+            "Представь мокрую дорогу. "
+            "Она скользкая, и грузовик начинает немного заносить."
+        )
+    },
 
-# --------------------------------------------------
-# НАШИ ПЕРВЫЕ СЛОВА
-# --------------------------------------------------
-
-WORD_BASE = [
-
-    ("ROAD", "дорога"),
-    ("WET", "мокрый"),
-    ("TRUCK", "грузовик"),
-
-    ("CAR", "машина"),
-    ("DRIVE", "ехать / водить"),
-    ("STOP", "остановиться"),
-    ("GO", "ехать / идти"),
-    ("TURN", "поворачивать"),
-    ("LEFT", "налево / левый"),
-    ("RIGHT", "направо / правый"),
-
-    ("STRAIGHT", "прямо"),
-    ("FAST", "быстро"),
-    ("SLOW", "медленно"),
-    ("NEAR", "близко"),
-    ("FAR", "далеко"),
-
-    ("BRIDGE", "мост"),
-    ("EXIT", "выезд"),
-    ("ENTRANCE", "въезд"),
-
-    ("LOAD", "груз / загружать"),
-    ("UNLOAD", "разгружать"),
-
-    ("CONTAINER", "контейнер"),
-    ("TRAILER", "прицеп"),
-    ("DRIVER", "водитель"),
-    ("PORT", "порт"),
-
-    ("SHIP", "судно"),
-    ("WEIGHT", "вес"),
-    ("DOCUMENT", "документ"),
-    ("CHECK", "проверять"),
-    ("WAIT", "ждать"),
-    ("READY", "готов"),
-
+    {
+        "english": "DELAY",
+        "russian": "задержка",
+        "association": (
+            "Представь грузовик перед портом. "
+            "Очередь стоит, и погрузка задерживается."
+        )
+    }
 ]
 
 
-# --------------------------------------------------
-# ПОЛУЧАЕМ НОВЫЕ 3 СЛОВА
-# --------------------------------------------------
+# ==================================================
+# ГОЛОС
+# ==================================================
 
-def get_new_words(progress):
-
-    used = progress.get("learned", [])
-
-    available = []
-
-    for word, translation in WORD_BASE:
-
-        if word not in used:
-            available.append((word, translation))
-
-    return available[:3]
+ENGLISH_VOICE = "en-US-JennyNeural"
+RUSSIAN_VOICE = "ru-RU-SvetlanaNeural"
 
 
-# --------------------------------------------------
+async def create_voice(text, voice, rate="-20%"):
+
+    filename = tempfile.NamedTemporaryFile(
+        suffix=".mp3",
+        delete=False
+    ).name
+
+    communicate = edge_tts.Communicate(
+        text=text,
+        voice=voice,
+        rate=rate
+    )
+
+    await communicate.save(filename)
+
+    audio = AudioSegment.from_file(filename)
+
+    os.remove(filename)
+
+    return audio
+
+
+# ==================================================
 # АУДИО
-# --------------------------------------------------
+# ==================================================
 
-def make_audio(words, filename="lesson.mp3"):
+async def make_audio():
 
     result = AudioSegment.empty()
 
-    pause_english = AudioSegment.silent(duration=1200)
-    pause_russian = AudioSegment.silent(duration=1800)
+    pause_1 = AudioSegment.silent(duration=1200)
+    pause_2 = AudioSegment.silent(duration=1800)
+    pause_recall = AudioSegment.silent(duration=3500)
 
-    for english, russian in words:
+    for word in WORDS:
 
-        for _ in range(10):
+        english = word["english"]
+        russian = word["russian"]
+        association = word["association"]
 
-            with tempfile.NamedTemporaryFile(
-                suffix=".mp3"
-            ) as en_file:
+        # ------------------------------------------
+        # ЗНАКОМСТВО
+        # ------------------------------------------
 
-                gTTS(
-                    text=english,
-                    lang="en",
-                    slow=True
-                ).save(en_file.name)
+        result += await create_voice(
+            english,
+            ENGLISH_VOICE,
+            "-20%"
+        )
 
-                english_audio = AudioSegment.from_mp3(
-                    en_file.name
-                )
+        result += pause_1
 
-            with tempfile.NamedTemporaryFile(
-                suffix=".mp3"
-            ) as ru_file:
+        result += await create_voice(
+            association,
+            RUSSIAN_VOICE,
+            "-15%"
+        )
 
-                gTTS(
-                    text=russian,
-                    lang="ru",
-                    slow=True
-                ).save(ru_file.name)
+        result += pause_2
 
-                russian_audio = AudioSegment.from_mp3(
-                    ru_file.name
-                )
+        result += await create_voice(
+            english,
+            ENGLISH_VOICE,
+            "-20%"
+        )
+
+        result += pause_1
+
+        result += await create_voice(
+            russian,
+            RUSSIAN_VOICE,
+            "-15%"
+        )
+
+        result += pause_2
+
+        # ------------------------------------------
+        # 10 ПОВТОРЕНИЙ
+        # ------------------------------------------
+
+        english_audio = await create_voice(
+            english,
+            ENGLISH_VOICE,
+            "-20%"
+        )
+
+        russian_audio = await create_voice(
+            russian,
+            RUSSIAN_VOICE,
+            "-15%"
+        )
+
+        for i in range(10):
 
             result += english_audio
-            result += pause_english
 
-            result += russian_audio
-            result += pause_russian
+            result += pause_1
 
-    result.export(
-        filename,
-        format="mp3"
+            # Первые 6 раз слышим перевод
+            if i < 6:
+
+                result += russian_audio
+
+                result += pause_1
+
+            # Последние 4 раза пробуем вспомнить
+            else:
+
+                result += pause_1
+
+                result += russian_audio
+
+                result += pause_1
+
+    # ==================================================
+    # RECALL
+    # ==================================================
+
+    result += await create_voice(
+        "Теперь попробуй вспомнить сам.",
+        RUSSIAN_VOICE,
+        "-15%"
     )
 
-    return filename
+    result += pause_2
+
+    for word in WORDS:
+
+        result += await create_voice(
+            word["russian"],
+            RUSSIAN_VOICE,
+            "-15%"
+        )
+
+        # МЕСТО ДЛЯ ВСПОМИНАНИЯ
+        result += pause_recall
+
+        result += await create_voice(
+            word["english"],
+            ENGLISH_VOICE,
+            "-20%"
+        )
+
+        result += pause_2
+
+    # ==================================================
+    # ПОСЛЕДНЯЯ ПРОВЕРКА
+    # ==================================================
+
+    result += await create_voice(
+        "Последний раз. Попробуй сказать сам.",
+        RUSSIAN_VOICE,
+        "-15%"
+    )
+
+    result += pause_2
+
+    for word in WORDS:
+
+        result += await create_voice(
+            word["english"],
+            ENGLISH_VOICE,
+            "-20%"
+        )
+
+        result += pause_1
+
+    result.export(
+        "lesson.mp3",
+        format="mp3",
+        bitrate="128k"
+    )
 
 
-# --------------------------------------------------
-# ОТПРАВКА ТЕКСТА
-# --------------------------------------------------
+# ==================================================
+# ОТПРАВКА АУДИО
+# ==================================================
 
-def send_message(chat_id, text):
+def send_audio(chat_id):
+
+    url = f"https://api.telegram.org/bot{TOKEN}/sendAudio"
+
+    with open("lesson.mp3", "rb") as audio:
+
+        response = requests.post(
+
+            url,
+
+            data={
+                "chat_id": chat_id,
+
+                "caption": (
+                    "🎧 ENGLISH RADAR — УРОК 1\n\n"
+                    "🛣 ROAD — дорога\n"
+                    "🌧 SLIPPERY — скользкий\n"
+                    "🚛 DELAY — задержка\n\n"
+                    "🧠 Ассоциации\n"
+                    "🔁 10 повторений каждого слова\n"
+                    "🎯 Recall — вспоминаем без подсказки\n\n"
+                    "Скорость речи: немного медленнее обычной."
+                )
+            },
+
+            files={
+                "audio": (
+                    "lesson.mp3",
+                    audio,
+                    "audio/mpeg"
+                )
+            }
+        )
+
+    print(response.text)
+
+
+# ==================================================
+# ТЕКСТОВЫЙ УРОК
+# ==================================================
+
+def send_text_lesson(chat_id):
+
+    text = (
+        "🇬🇧 ENGLISH RADAR\n\n"
+        "🎓 УРОК 1 — ДОРОГА\n\n"
+
+        "🛣 ROAD — дорога\n"
+        "🌧 SLIPPERY — скользкий\n"
+        "🚛 DELAY — задержка\n\n"
+
+        "Сначала создаём образ в голове.\n"
+        "Потом слушаем и повторяем.\n"
+        "В конце — проверяем память.\n\n"
+
+        "🎧 Аудио ниже."
+    )
 
     telegram(
         "sendMessage",
@@ -199,317 +347,92 @@ def send_message(chat_id, text):
     )
 
 
-# --------------------------------------------------
-# ОТПРАВКА АУДИО
-# --------------------------------------------------
+# ==================================================
+# ОБРАБОТКА /START
+# ==================================================
 
-def send_audio(chat_id, filename, caption):
+def check_start():
 
-    url = f"https://api.telegram.org/bot{TOKEN}/sendAudio"
+    updates = telegram("getUpdates")
 
-    with open(filename, "rb") as audio:
+    for update in updates.get("result", []):
 
-        response = requests.post(
+        message = update.get("message")
 
-            url,
+        if not message:
+            continue
 
-            data={
-                "chat_id": chat_id,
-                "caption": caption
-            },
+        chat_id = message["chat"]["id"]
 
-            files={
-                "audio": (
-                    filename,
-                    audio,
-                    "audio/mpeg"
-                )
-            }
-        )
+        save_chat_id(chat_id)
 
-    print(response.text)
+        text = message.get("text", "")
 
+        if text.startswith("/start"):
 
-# --------------------------------------------------
-# 08:00 — НОВЫЕ СЛОВА
-# --------------------------------------------------
-
-def run_lesson(progress):
-
-    now = datetime.now(ZoneInfo("Europe/Kyiv"))
-    hour = now.hour
-
-    print("Kyiv time:", now.strftime("%Y-%m-%d %H:%M:%S"))
-
-    if hour == 8:
-        lesson_morning(progress)
-
-    elif hour == 10:
-        lesson_combinations(progress)
-
-    elif hour == 12:
-        lesson_sentence(progress)
-
-    elif hour == 14:
-        lesson_recall(progress)
-
-    elif hour == 16:
-        lesson_explain(progress)
-
-    else:
-        print("Сейчас учебного этапа нет.")
-
-    if not words:
-        return
-
-    progress["words"] = words
-
-    for word, _ in words:
-
-        if word not in progress["learned"]:
-            progress["learned"].append(word)
-
-    save_progress(progress)
-
-    text = (
-        "🇬🇧 ENGLISH RADAR\n\n"
-        f"🎓 День {progress['day']} — новые слова\n\n"
-    )
-
-    for word, translation in words:
-
-        text += f"🔹 {word} — {translation}\n"
-
-    text += (
-        "\n🎧 Сейчас слушаем.\n"
-        "Каждое слово будет повторено 10 раз.\n\n"
-        "Главное правило:\n"
-        "не просто услышать — попытайся вспомнить."
-    )
-
-    send_message(
-        progress["chat_id"],
-        text
-    )
-
-    filename = make_audio(
-        words,
-        "lesson.mp3"
-    )
-
-    send_audio(
-        progress["chat_id"],
-        filename,
-        "🎧 English Radar — повторение ×10"
-    )
-
-
-# --------------------------------------------------
-# 10:00 — СОЧЕТАНИЯ
-# --------------------------------------------------
-
-def lesson_combinations(progress):
-
-    words = progress.get("words", [])
-
-    if not words:
-        return
-
-    first = words[0]
-    second = words[1]
-
-    text = (
-        "🇬🇧 ENGLISH RADAR\n\n"
-        "🔄 Повторяем и соединяем слова\n\n"
-        f"{first[0]} — {first[1]}\n"
-        f"{second[0]} — {second[1]}\n\n"
-        f"👉 {second[0]} {first[0]}\n"
-        f"   {second[1]} {first[1]}\n\n"
-        "Теперь попробуй сам вспомнить английский вариант."
-    )
-
-    send_message(
-        progress["chat_id"],
-        text
-    )
-
-
-# --------------------------------------------------
-# 12:00 — ПРОСТАЯ ФРАЗА
-# --------------------------------------------------
-
-def lesson_sentence(progress):
-
-    words = progress.get("words", [])
-
-    if len(words) < 2:
-        return
-
-    first = words[0]
-    second = words[1]
-
-    text = (
-        "🇬🇧 ENGLISH RADAR\n\n"
-        "🧩 Строим простую фразу\n\n"
-        "THE ROAD IS WET.\n\n"
-        "Дорога мокрая.\n\n"
-        "Объясни это семилетнему ребёнку:\n"
-        "что означает ROAD?\n"
-        "что означает WET?\n\n"
-        "Не смотри подсказку — сначала вспомни."
-    )
-
-    send_message(
-        progress["chat_id"],
-        text
-    )
-
-
-# --------------------------------------------------
-# 14:00 — RECALL
-# --------------------------------------------------
-
-def lesson_recall(progress):
-
-    words = progress.get("words", [])
-
-    if not words:
-        return
-
-    text = (
-        "🧠 ENGLISH RADAR — RECALL\n\n"
-        "Теперь без подсказки.\n\n"
-    )
-
-    for _, translation in words:
-
-        text += f"❓ Как будет: {translation}?\n\n"
-
-    text += (
-        "Пауза.\n"
-        "Попробуй вспомнить вслух.\n\n"
-        "ROAD\n"
-        "WET\n"
-        "TRUCK"
-    )
-
-    send_message(
-        progress["chat_id"],
-        text
-    )
-
-
-# --------------------------------------------------
-# 16:00 — ОБЪЯСНЕНИЕ
-# --------------------------------------------------
-
-def lesson_explain(progress):
-
-    words = progress.get("words", [])
-
-    if not words:
-        return
-
-    text = (
-        "🗣️ ENGLISH RADAR — ОБЪЯСНИ\n\n"
-        "Представь, что перед тобой семилетний ребёнок.\n\n"
-        "Объясни ему простыми словами:\n\n"
-        f"ROAD — {words[0][1]}\n"
-        f"WET — {words[1][1]}\n"
-        f"TRUCK — {words[2][1]}\n\n"
-        "Если можешь объяснить просто — значит,\n"
-        "ты начинаешь действительно понимать.\n\n"
-        "Ошибки — это нормально.\n"
-        "Они показывают, где память ещё работает."
-    )
-
-    send_message(
-        progress["chat_id"],
-        text
-    )
-
-
-# --------------------------------------------------
-# ОПРЕДЕЛЯЕМ ЭТАП ПО ЧАСУ
-# --------------------------------------------------
-
-def run_lesson(progress):
-
-    hour = datetime.now().hour
-
-    print("Current hour:", hour)
-
-    if hour == 8:
-
-        lesson_morning(progress)
-
-    elif hour == 10:
-
-        lesson_combinations(progress)
-
-    elif hour == 12:
-
-        lesson_sentence(progress)
-
-    elif hour == 14:
-
-        lesson_recall(progress)
-
-    elif hour == 16:
-
-        lesson_explain(progress)
-
-    else:
-
-        print("Сейчас учебного этапа нет.")
-
-
-# --------------------------------------------------
-# START
-# --------------------------------------------------
-
-progress = load_progress()
-
-updates = telegram("getUpdates")
-
-for update in updates.get("result", []):
-
-    message = update.get("message")
-
-    if not message:
-        continue
-
-    chat_id = message["chat"]["id"]
-
-    progress["chat_id"] = chat_id
-
-    text = message.get("text", "")
-
-    if text.startswith("/start"):
-
-        send_message(
-            chat_id,
-            (
-                "🇬🇧 ENGLISH RADAR\n\n"
-                "Бот подключён.\n"
-                "Твой Telegram сохранён.\n\n"
-                "Теперь я могу присылать уроки автоматически."
+            telegram(
+                "sendMessage",
+                {
+                    "chat_id": chat_id,
+                    "text": (
+                        "🇬🇧 ENGLISH RADAR\n\n"
+                        "Бот подключён.\n"
+                        "Твой Telegram сохранён.\n\n"
+                        "Теперь я могу присылать уроки автоматически."
+                    )
+                }
             )
-        )
-
-        save_progress(progress)
 
 
-# Если chat_id уже известен —
-# запускаем нужный этап.
+# ==================================================
+# ОСНОВНАЯ ПРОГРАММА
+# ==================================================
 
-if progress.get("chat_id"):
+def main():
 
-    run_lesson(progress)
+    # Проверяем Telegram
+    check_start()
 
-else:
+    chat_id = get_chat_id()
+
+    if not chat_id:
+
+        print("CHAT ID пока не найден.")
+
+        return
+
+    now = datetime.now(KYIV)
 
     print(
-        "Chat ID пока неизвестен. "
-        "Отправь боту /start."
+        "Kyiv time:",
+        now.strftime("%Y-%m-%d %H:%M")
     )
+
+    hour = now.hour
+
+    # Пока тестируем только ручной запуск
+    # и утренний урок в 08:00.
+
+    if hour == 8 or os.environ.get("TEST_LESSON") == "1":
+
+        print("Запускаем урок.")
+
+        send_text_lesson(chat_id)
+
+        asyncio.run(
+            make_audio()
+        )
+
+        send_audio(chat_id)
+
+        print("Урок отправлен.")
+
+    else:
+
+        print(
+            "Сейчас не время урока.",
+            hour
+        )
+
+
+main()
