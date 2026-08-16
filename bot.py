@@ -3,15 +3,16 @@ import json
 import urllib.request
 import urllib.parse
 import requests
-import tempfile
+import asyncio
+import subprocess
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from gtts import gTTS
-from pydub import AudioSegment
-
-
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
+
+KYIV = ZoneInfo("Europe/Kyiv")
+
+WORDS_FILE = "words.json"
 
 
 def telegram(method, data=None):
@@ -26,123 +27,336 @@ def telegram(method, data=None):
         return json.loads(response.read().decode())
 
 
-# =========================================================
-# НАШИ СЛОВА
-# =========================================================
+def get_chat_id():
 
-WORDS = [
-    {
-        "en": "ROAD",
-        "ru": "дорога",
-        "association": "ROAD звучит примерно как «РОУД» — представь ДОРОГУ перед собой."
-    },
-    {
-        "en": "SLIPPERY",
-        "ru": "скользкий",
-        "association": "SLIPPERY — представь скользкую дорогу после дождя."
-    },
-    {
-        "en": "DELAY",
-        "ru": "задержка",
-        "association": "DELAY — представь, что грузовик задержался в пути."
-    }
-]
+    updates = telegram("getUpdates")
+
+    latest_chat_id = None
+
+    for update in updates.get("result", []):
+
+        message = update.get("message")
+
+        if not message:
+            continue
+
+        latest_chat_id = message["chat"]["id"]
+
+    return latest_chat_id
 
 
-# =========================================================
-# АУДИО
-# =========================================================
+def load_words():
 
-def make_audio(stage):
+    with open(WORDS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
 
-    result = AudioSegment.empty()
 
-    pause_short = AudioSegment.silent(duration=900)
-    pause_long = AudioSegment.silent(duration=1600)
+def get_today_words():
 
-    for word in WORDS:
+    words = load_words()
 
-        english = word["en"]
-        russian = word["ru"]
+    start_date = datetime(2026, 8, 17, tzinfo=KYIV)
 
-        # -------------------------------------------------
-        # ЭТАП 1 — слово + ассоциация
-        # -------------------------------------------------
+    now = datetime.now(KYIV)
 
-        if stage == 1:
+    day_number = (now.date() - start_date.date()).days
 
-            for i in range(3):
+    if day_number < 0:
+        day_number = 0
 
-                with tempfile.NamedTemporaryFile(suffix=".mp3") as f:
-                    gTTS(
-                        text=english,
-                        lang="en",
-                        slow=True
-                    ).save(f.name)
+    start_index = day_number * 3
 
-                    en_audio = AudioSegment.from_mp3(f.name)
+    today_words = words[start_index:start_index + 3]
 
-                result += en_audio
-                result += pause_short
+    return today_words
 
-                with tempfile.NamedTemporaryFile(suffix=".mp3") as f:
-                    gTTS(
-                        text=russian,
-                        lang="ru",
-                        slow=True
-                    ).save(f.name)
 
-                    ru_audio = AudioSegment.from_mp3(f.name)
+def get_stage():
 
-                result += ru_audio
-                result += pause_long
+    hour = datetime.now(KYIV).hour
 
-        # -------------------------------------------------
-        # ЭТАПЫ 2–5 — интенсивное повторение
-        # -------------------------------------------------
+    if hour < 9:
+        return 1
 
-        else:
+    if hour < 11:
+        return 2
 
-            for i in range(10):
+    if hour < 13:
+        return 3
 
-                with tempfile.NamedTemporaryFile(suffix=".mp3") as f:
-                    gTTS(
-                        text=english,
-                        lang="en",
-                        slow=True
-                    ).save(f.name)
+    if hour < 15:
+        return 4
 
-                    en_audio = AudioSegment.from_mp3(f.name)
+    return 5
 
-                result += en_audio
-                result += pause_short
 
-                with tempfile.NamedTemporaryFile(suffix=".mp3") as f:
-                    gTTS(
-                        text=russian,
-                        lang="ru",
-                        slow=True
-                    ).save(f.name)
+async def make_voice(text, filename, voice, rate="-15%"):
 
-                    ru_audio = AudioSegment.from_mp3(f.name)
+    command = [
+        "edge-tts",
+        "--voice",
+        voice,
+        "--rate",
+        rate,
+        "--text",
+        text,
+        "--write-media",
+        filename
+    ]
 
-                result += ru_audio
-                result += pause_long
+    process = await asyncio.create_subprocess_exec(
+        *command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
 
-    filename = f"lesson_stage_{stage}.mp3"
+    await process.communicate()
 
-    result.export(filename, format="mp3")
+
+def make_audio(words, stage):
+
+    filename = "lesson.mp3"
+
+    parts = []
+
+    if stage == 1:
+
+        for item in words:
+
+            parts.append(
+                f"{item['word']}. "
+                f"{item['association']} "
+                f"{item['translation']}. "
+            )
+
+            for _ in range(10):
+
+                parts.append(
+                    f"{item['word']}. "
+                    f"{item['translation']}. "
+                )
+
+    elif stage == 2:
+
+        for item in words:
+
+            sentence = make_sentence(item["word"])
+
+            parts.append(
+                f"{item['word']}. "
+                f"{item['translation']}. "
+                f"{sentence}. "
+            )
+
+            for _ in range(5):
+
+                parts.append(
+                    f"{item['word']}. "
+                    f"{sentence}. "
+                )
+
+    elif stage == 3:
+
+        parts.append(
+            "Теперь вспоминаем. "
+            "Сначала слушай английское слово. "
+            "Попробуй вспомнить перевод сам."
+        )
+
+        for item in words:
+
+            for _ in range(5):
+
+                parts.append(
+                    f"{item['word']}."
+                )
+
+                parts.append(
+                    f"{item['translation']}."
+                )
+
+    elif stage == 4:
+
+        for item in words:
+
+            sentence = make_sentence(item["word"])
+
+            parts.append(
+                f"{sentence}. "
+                f"{item['word']}. "
+                f"{item['translation']}."
+            )
+
+            for _ in range(5):
+
+                parts.append(
+                    f"{sentence}. "
+                    f"{item['word']}."
+                )
+
+    else:
+
+        parts.append(
+            "Финальная проверка. "
+            "Не спеши. Вспоминай сам."
+        )
+
+        for item in words:
+
+            for _ in range(5):
+
+                parts.append(
+                    f"{item['word']}."
+                )
+
+            parts.append(
+                f"{item['translation']}."
+            )
+
+    text = " ".join(parts)
+
+    asyncio.run(
+        make_voice(
+            text,
+            filename,
+            "en-US-GuyNeural",
+            "-15%"
+        )
+    )
 
     return filename
 
 
-# =========================================================
-# ОТПРАВКА АУДИО
-# =========================================================
+def make_sentence(word):
 
-def send_audio(chat_id, stage):
+    sentences = {
 
-    filename = make_audio(stage)
+        "ROAD": "The road is long",
+
+        "SLIPPERY": "The road is slippery",
+
+        "DELAY": "There is a delay",
+
+        "TRUCK": "The truck is big",
+
+        "DRIVER": "The driver is tired",
+
+        "STOP": "Stop the truck",
+
+        "TURN": "Turn right",
+
+        "FAST": "The truck is fast",
+
+        "SLOW": "Drive slow",
+
+        "FUEL": "We need fuel",
+
+        "ROADWORK": "There is roadwork",
+
+        "TRAFFIC": "There is traffic",
+
+        "BRAKE": "Press the brake",
+
+        "LEFT": "Turn left",
+
+        "RIGHT": "Turn right",
+
+        "MORNING": "Good morning",
+
+        "NIGHT": "Good night",
+
+        "RAIN": "It is raining",
+
+        "SNOW": "It is snowing",
+
+        "WAIT": "Wait here",
+
+        "ARRIVE": "We arrive tomorrow"
+    }
+
+    return sentences.get(word, word)
+
+
+def send_text(chat_id, words, stage):
+
+    if stage == 1:
+
+        title = "🌅 Урок начинается"
+
+        body = ""
+
+        for item in words:
+
+            body += (
+                f"\n🔊 {item['word']}\n"
+                f"🇷🇺 {item['translation']}\n"
+                f"🧠 {item['association']}\n"
+            )
+
+        body += "\n🎧 Слушай аудио и не спеши."
+
+    elif stage == 2:
+
+        title = "🔄 Повторение №2"
+
+        body = "\n"
+
+        for item in words:
+
+            body += (
+                f"{item['word']} — {make_sentence(item['word'])}\n"
+            )
+
+    elif stage == 3:
+
+        title = "🧠 RECALL — вспоминаем"
+
+        body = (
+            "\nСначала услышь слово.\n"
+            "Попробуй вспомнить перевод ДО того, "
+            "как услышишь ответ."
+        )
+
+    elif stage == 4:
+
+        title = "🔄 Творческое повторение"
+
+        body = (
+            "\nСегодня смотрим на слова с другой стороны.\n"
+            "Слушай фразы и узнавай знакомые слова."
+        )
+
+    else:
+
+        title = "🎓 Финальная проверка"
+
+        body = (
+            "\nПоследний проход.\n"
+            "Попробуй вспомнить значение каждого слова самостоятельно."
+        )
+
+    telegram(
+        "sendMessage",
+        {
+            "chat_id": chat_id,
+            "text": (
+                "🇬🇧 ENGLISH RADAR\n\n"
+                f"{title}\n"
+                f"{body}"
+            )
+        }
+    )
+
+
+def send_audio(chat_id, filename, stage):
+
+    captions = {
+        1: "🎧 Урок 1 — знакомство + ассоциации + повторение ×10",
+        2: "🎧 Повторение №2 — слова в простых фразах",
+        3: "🎧 RECALL — сначала вспоминаем сами",
+        4: "🎧 Творческое повторение",
+        5: "🎧 Финальная проверка"
+    }
 
     url = f"https://api.telegram.org/bot{TOKEN}/sendAudio"
 
@@ -152,12 +366,7 @@ def send_audio(chat_id, stage):
             url,
             data={
                 "chat_id": chat_id,
-                "caption": (
-                    f"🎧 English Radar — этап {stage}\n\n"
-                    "ROAD • SLIPPERY • DELAY\n"
-                    "Медленное произношение\n"
-                    "Повторение ×10"
-                )
+                "caption": captions.get(stage, "🎧 English Radar")
             },
             files={
                 "audio": (
@@ -169,190 +378,57 @@ def send_audio(chat_id, stage):
         )
 
 
-# =========================================================
-# ТЕКСТ УРОКА
-# =========================================================
+def main():
 
-def lesson_text(stage):
+    now = datetime.now(KYIV)
 
-    if stage == 1:
+    print("Kyiv time:", now.strftime("%Y-%m-%d %H:%M"))
 
-        return (
-            "🇬🇧 ENGLISH RADAR\n\n"
-            "🎓 Урок 1 — Дорога\n\n"
+    chat_id = get_chat_id()
 
-            "🔊 ROAD\n"
-            "дорога\n"
-            "💡 Представь дорогу перед собой.\n\n"
+    if not chat_id:
 
-            "🔊 SLIPPERY\n"
-            "скользкий\n"
-            "💡 Представь скользкую дорогу после дождя.\n\n"
+        print("Chat ID не найден.")
 
-            "🔊 DELAY\n"
-            "задержка\n"
-            "💡 Представь грузовик, который задержался.\n\n"
+        return
 
-            "🎧 Сейчас слушаем и повторяем.\n"
-            "Не просто слушай — попробуй вспомнить."
-        )
+    words = get_today_words()
 
-    if stage == 2:
+    if not words:
 
-        return (
-            "🇬🇧 ENGLISH RADAR\n\n"
-            "🔁 Этап 2 — соединяем слова\n\n"
+        print("Библиотека слов закончилась.")
 
-            "ROAD — дорога\n"
-            "SLIPPERY ROAD — скользкая дорога\n\n"
+        return
 
-            "DELAY — задержка\n"
-            "TRAFFIC DELAY — задержка движения\n\n"
+    stage = get_stage()
 
-            "🎧 Слушаем несколько раз."
-        )
+    print("Stage:", stage)
 
-    if stage == 3:
-
-        return (
-            "🇬🇧 ENGLISH RADAR\n\n"
-            "🔁 Этап 3 — вспоминаем\n\n"
-
-            "ROAD — дорога\n"
-            "SLIPPERY — скользкий\n"
-            "DELAY — задержка\n\n"
-
-            "Попробуй сказать английское слово,\n"
-            "не подсматривая перевод."
-        )
-
-    if stage == 4:
-
-        return (
-            "🇬🇧 ENGLISH RADAR\n\n"
-            "🔁 Этап 4 — строим маленькие фразы\n\n"
-
-            "SLIPPERY ROAD — скользкая дорога\n\n"
-            "TRAFFIC DELAY — задержка движения\n\n"
-
-            "🎧 Слушаем и повторяем."
-        )
-
-    return (
-        "🇬🇧 ENGLISH RADAR\n\n"
-        "🏁 Этап 5 — закрепление\n\n"
-
-        "ROAD — дорога\n"
-        "SLIPPERY ROAD — скользкая дорога\n"
-        "TRAFFIC DELAY — задержка движения\n\n"
-
-        "Теперь попробуй вспомнить всё без подсказки.\n\n"
-        "🧠 Ошибся — отлично. Значит, нашли границу памяти."
+    print(
+        "Today's words:",
+        [item["word"] for item in words]
     )
 
-
-# =========================================================
-# ОПРЕДЕЛЯЕМ ЭТАП ПО ВРЕМЕНИ КИЕВА
-# =========================================================
-
-def current_stage():
-
-    now = datetime.now(
-        ZoneInfo("Europe/Kyiv")
+    send_text(
+        chat_id,
+        words,
+        stage
     )
 
-    hour = now.hour
+    filename = make_audio(
+        words,
+        stage
+    )
 
-    stages = {
-        8: 1,
-        10: 2,
-        12: 3,
-        14: 4,
-        16: 5
-    }
+    send_audio(
+        chat_id,
+        filename,
+        stage
 
-    return stages.get(hour)
+    )
 
-
-# =========================================================
-# ПОЛУЧАЕМ TELEGRAM
-# =========================================================
-
-updates = telegram("getUpdates")
+    print("English Radar успешно отправил урок.")
 
 
-for update in updates.get("result", []):
-
-    message = update.get("message")
-
-    if not message:
-        continue
-
-    chat_id = message["chat"]["id"]
-
-    text = message.get("text", "").strip().lower()
-
-    # -----------------------------------------------------
-    # START
-    # -----------------------------------------------------
-
-    if text.startswith("/start"):
-
-        telegram(
-            "sendMessage",
-            {
-                "chat_id": chat_id,
-                "text": (
-                    "🇬🇧 ENGLISH RADAR\n\n"
-                    "Бот подключён.\n\n"
-                    "📚 Каждый день будет 5 этапов:\n"
-                    "08:00\n"
-                    "10:00\n"
-                    "12:00\n"
-                    "14:00\n"
-                    "16:00\n\n"
-                    "🎧 Каждый урок сопровождается аудио.\n\n"
-                    "Для немедленной проверки напиши:\n"
-                    "/test"
-                )
-            }
-        )
-
-    # -----------------------------------------------------
-    # TEST — ЗАПУСК ПРЯМО СЕЙЧАС
-    # -----------------------------------------------------
-
-    elif text == "/test":
-
-        stage = 1
-
-        telegram(
-            "sendMessage",
-            {
-                "chat_id": chat_id,
-                "text": lesson_text(stage)
-            }
-        )
-
-        send_audio(chat_id, stage)
-
-    # -----------------------------------------------------
-    # АВТОМАТИЧЕСКИЙ УРОК
-    # -----------------------------------------------------
-
-    stage = current_stage()
-
-    if stage:
-
-        telegram(
-            "sendMessage",
-            {
-                "chat_id": chat_id,
-                "text": lesson_text(stage)
-            }
-        )
-
-        send_audio(chat_id, stage)
-
-
-print("English Radar работает.")
+if __name__ == "__main__":
+    main()
