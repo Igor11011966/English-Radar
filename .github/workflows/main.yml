@@ -15,16 +15,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Get code
         uses: actions/checkout@v4
 
       - name: Install libraries
         run: |
           python -m pip install --upgrade pip
-          python -m pip install gTTS requests pydub
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg
-
+          python -m pip install requests edge-tts
+          
       - name: Run English Radar
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
