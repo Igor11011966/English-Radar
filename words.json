@@ -1,1 +1,107 @@
-
+[
+  {
+    "word": "ROAD",
+    "translation": "дорога",
+    "association": "Представь семейный РОД. Весь семейный РОД дружно идёт по ДОРОГЕ — ROAD."
+  },
+  {
+    "word": "SLIPPERY",
+    "translation": "скользкий",
+    "association": "Ты идёшь по льду: ноги СЛИП-СЛИП, всё скользит. Это SLIPPERY — скользкий."
+  },
+  {
+    "word": "DELAY",
+    "translation": "задержка",
+    "association": "Тебе говорят: ДЕЛАЙ! А ты отвечаешь: потом. Получилась ЗАДЕРЖКА — DELAY."
+  },
+  {
+    "word": "TRUCK",
+    "translation": "грузовик",
+    "association": "Представь огромный ТРАК, который превращается в TRUCK — грузовик."
+  },
+  {
+    "word": "DRIVER",
+    "translation": "водитель",
+    "association": "DRIVER — тот, кто ДРАЙВИТ, то есть ведёт машину. DRIVER — водитель."
+  },
+  {
+    "word": "STOP",
+    "translation": "остановка, остановиться",
+    "association": "Ты едешь и говоришь: СТОП! STOP — остановиться."
+  },
+  {
+    "word": "TURN",
+    "translation": "поворот, повернуть",
+    "association": "Ты говоришь: ТУРН! И руль делает поворот. TURN — повернуть."
+  },
+  {
+    "word": "FAST",
+    "translation": "быстро",
+    "association": "Машина мчится так FAST, что ты говоришь: ФАСТ! Как быстро!"
+  },
+  {
+    "word": "SLOW",
+    "translation": "медленно",
+    "association": "На подъёме машина едет СЛОУ-СЛОУ — очень медленно. SLOW — медленно."
+  },
+  {
+    "word": "FUEL",
+    "translation": "топливо",
+    "association": "Машине нужен FUEL. Представь: ФЬЮУУ — и топливо залилось в бак."
+  },
+  {
+    "word": "ROADWORK",
+    "translation": "дорожные работы",
+    "association": "ROAD — дорога, WORK — работа. Работа на дороге — ROADWORK."
+  },
+  {
+    "word": "TRAFFIC",
+    "translation": "дорожное движение, пробка",
+    "association": "Представь ТРАФИК: машины стоят одна за другой. TRAFFIC — движение, трафик."
+  },
+  {
+    "word": "BRAKE",
+    "translation": "тормоз",
+    "association": "Ты нажимаешь на БРЕЙК — и машина тормозит. BRAKE — тормоз."
+  },
+  {
+    "word": "LEFT",
+    "translation": "левый, налево",
+    "association": "Поверни ЛЕФТ — налево. LEFT — левый, налево."
+  },
+  {
+    "word": "RIGHT",
+    "translation": "правый, направо",
+    "association": "Поверни направо — RIGHT. Представь большой знак RIGHT."
+  },
+  {
+    "word": "MORNING",
+    "translation": "утро",
+    "association": "Утром ты говоришь: МОРНИНГ! Доброе утро. MORNING — утро."
+  },
+  {
+    "word": "NIGHT",
+    "translation": "ночь",
+    "association": "Наступила НОЧЬ. NIGHT звучит как НАЙТ — ночь."
+  },
+  {
+    "word": "RAIN",
+    "translation": "дождь",
+    "association": "С неба РЕЙН-РЕЙН — льётся дождь. RAIN — дождь."
+  },
+  {
+    "word": "SNOW",
+    "translation": "снег",
+    "association": "С неба падает SNOW. Представь снег и скажи: СНОУ — снег."
+  },
+  {
+    "word": "WAIT",
+    "translation": "ждать",
+    "association": "Ты говоришь: ВЭЙТ! Подожди! WAIT — ждать."
+  },
+  {
+    "word": "ARRIVE",
+    "translation": "прибыть, приехать",
+    "association": "Машина приехала. Все говорят: АРРАЙВ! Мы прибыли. ARRIVE — приехать."
+  }
+]
