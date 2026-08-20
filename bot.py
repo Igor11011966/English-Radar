@@ -18,7 +18,6 @@ START_DATE = datetime(2026, 8, 17, tzinfo=KYIV).date()
 
 
 def telegram(method, data=None):
-def telegram(method, data=None):
     url = f"https://api.telegram.org/bot{TOKEN}/{method}"
 
     response = requests.post(
