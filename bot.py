@@ -18,29 +18,7 @@ START_DATE = datetime(2026, 8, 17, tzinfo=KYIV).date()
 
 
 def telegram(method, data=None):
-    url = f"https://api.telegram.org/bot{TOKEN}/{method}"
-
-    response = requests.post(
-        url,
-        data=data,
-        timeout=30
-    )
-
-    print("TELEGRAM RESPONSE:")
-    print(response.text)
-
-    response.raise_for_status()
-
-    return response.json()
-    url = f"https://api.telegram.org/bot{TOKEN}/{method}"
-
-    if data:
-        data = urllib.parse.urlencode(data).encode()
-
-    request = urllib.request.Request(url, data=data)
-
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return json.loads(response.read().decode())
+    
 
 
 def load_words():
