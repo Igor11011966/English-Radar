@@ -35,16 +35,8 @@ def telegram(method, data=None):
 
 
 def load_words():
-    if not os.path.exists(WORDS_FILE):
-        raise FileNotFoundError(f"Не найден файл {WORDS_FILE}")
-
     with open(WORDS_FILE, "r", encoding="utf-8") as f:
-        words = json.load(f)
-
-    if not isinstance(words, list):
-        raise ValueError("words.json должен содержать список слов")
-
-    return words
+       return json. load(f)
 
 
 def get_today_words():
