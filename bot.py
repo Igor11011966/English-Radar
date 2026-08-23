@@ -1,10 +1,15 @@
 import os
 import json
-import asyncio
-import requests
+import time
 import subprocess
+import requests
 from datetime import datetime
 from zoneinfo import ZoneInfo
+
+
+# ============================================================
+# SETTINGS
+# ============================================================
 
 TOKEN = os.environ["TELEGRAM_BOT_TOKEN"].strip()
 CHAT_ID = os.environ["TELEGRAM_CHAT_ID"].strip()
@@ -12,31 +17,66 @@ CHAT_ID = os.environ["TELEGRAM_CHAT_ID"].strip()
 KYIV = ZoneInfo("Europe/Kyiv")
 
 WORDS_FILE = "words.json"
-START_DATE = datetime(2026, 8, 17, tzinfo=KYIV).date()
+AUDIO_FILE = "lesson.mp3"
 
+START_DATE = datetime(
+    2026, 8, 17,
+    tzinfo=KYIV
+).date()
+
+
+# ============================================================
+# TELEGRAM
+# ============================================================
 
 def telegram(method, data=None):
+
     url = f"https://api.telegram.org/bot{TOKEN}/{method}"
 
     response = requests.post(
         url,
-        data=data or {},
+        data=data,
         timeout=30
     )
 
-    print(method, ":", response.text)
+    print("TELEGRAM RESPONSE:")
+    print(response.text)
 
     response.raise_for_status()
 
     result = response.json()
 
     if not result.get("ok"):
-        raise RuntimeError(result)
+        raise RuntimeError(
+            f"Telegram error: {result}"
+        )
 
     return result
 
 
+def send_message(text):
+
+    telegram(
+        "sendMessage",
+        {
+            "chat_id": CHAT_ID,
+            "text": text
+        }
+    )
+
+
+# ============================================================
+# WORDS
+# ============================================================
+
 def load_words():
+
+    if not os.path.exists(WORDS_FILE):
+
+        raise FileNotFoundError(
+            f"Не найден файл {WORDS_FILE}"
+        )
+
     with open(
         WORDS_FILE,
         "r",
@@ -46,6 +86,7 @@ def load_words():
         words = json.load(f)
 
     if not isinstance(words, list):
+
         raise ValueError(
             "words.json должен содержать список"
         )
@@ -57,7 +98,9 @@ def get_today_words():
 
     words = load_words()
 
-    today = datetime.now(KYIV).date()
+    today = datetime.now(
+        KYIV
+    ).date()
 
     day_number = (
         today - START_DATE
@@ -66,19 +109,25 @@ def get_today_words():
     if day_number < 0:
         day_number = 0
 
-    start = day_number * 3
-    end = start + 3
+    start_index = day_number * 3
 
-    today_words = words[start:end]
+    today_words = words[
+        start_index:start_index + 3
+    ]
 
     if len(today_words) < 3:
 
         raise ValueError(
-            "В библиотеке закончились слова"
+            "В words.json недостаточно слов "
+            f"для дня {day_number + 1}"
         )
 
     return today_words
 
+
+# ============================================================
+# STAGE
+# ============================================================
 
 def get_stage():
 
@@ -98,6 +147,10 @@ def get_stage():
 
     return 5
 
+
+# ============================================================
+# SENTENCES
+# ============================================================
 
 def make_sentence(word):
 
@@ -133,6 +186,9 @@ def make_sentence(word):
         "FUEL":
             "We need fuel.",
 
+        "ROADWORK":
+            "There is roadwork.",
+
         "TRAFFIC":
             "There is traffic.",
 
@@ -144,6 +200,12 @@ def make_sentence(word):
 
         "RIGHT":
             "Turn right.",
+
+        "MORNING":
+            "Good morning.",
+
+        "NIGHT":
+            "Good night.",
 
         "RAIN":
             "It is raining.",
@@ -164,182 +226,425 @@ def make_sentence(word):
     )
 
 
-async def make_voice(
+# ============================================================
+# EDGE TTS
+# ============================================================
+
+def make_voice(
     text,
     filename,
-    voice="en-US-GuyNeural"
+    voice
 ):
 
     command = [
+
         "edge-tts",
+
         "--voice",
         voice,
+
         "--rate",
-        "-10%",
+        "-15%",
+
         "--text",
         text,
+
         "--write-media",
         filename
     ]
 
-    process = await asyncio.create_subprocess_exec(
-        *command,
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE
+    print()
+    print("EDGE-TTS:")
+    print(text[:150])
+
+    last_error = ""
+
+    for attempt in range(1, 4):
+
+        print(
+            f"TTS attempt {attempt}/3"
+        )
+
+        try:
+
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                timeout=120
+            )
+
+            if result.returncode == 0:
+
+                if os.path.exists(filename):
+
+                    size = os.path.getsize(
+                        filename
+                    )
+
+                    if size > 1000:
+
+                        print(
+                            "TTS OK:",
+                            filename,
+                            size,
+                            "bytes"
+                        )
+
+                        return True
+
+            last_error = (
+                result.stderr
+                or result.stdout
+                or "Unknown edge-tts error"
+            )
+
+            print(
+                "edge-tts error:"
+            )
+
+            print(last_error)
+
+        except Exception as e:
+
+            last_error = str(e)
+
+            print(
+                "TTS exception:",
+                last_error
+            )
+
+        time.sleep(3)
+
+    print()
+    print(
+        "EDGE-TTS FAILED AFTER 3 ATTEMPTS"
     )
 
-    stdout, stderr = await process.communicate()
+    print(last_error)
 
-    if process.returncode != 0:
-
-        error = stderr.decode(
-            errors="ignore"
-        )
-
-        print(error)
-
-        raise RuntimeError(
-            "Ошибка edge-tts"
-        )
+    return False
 
 
-def make_audio(words, stage):
+# ============================================================
+# AUDIO TEXT
+# ============================================================
 
-    filename = "lesson.mp3"
+def build_audio_text(
+    item,
+    stage
+):
+
+    word = item["word"]
+    translation = item["translation"]
+    sentence = make_sentence(word)
+
+    # --------------------------------------------------------
+    # STAGE 1
+    # --------------------------------------------------------
 
     if stage == 1:
 
-        parts = []
+        english = (
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}."
+        )
 
-        for item in words:
+        russian = (
+            f"{translation}. "
+            f"{translation}. "
+            f"{translation}."
+        )
 
-            parts.append(
-                item["word"]
-            )
-
-            parts.append(
-                item["association"]
-            )
-
-            parts.append(
-                item["translation"]
-            )
-
-            for _ in range(10):
-
-                parts.append(
-                    item["word"]
-                )
-
-                parts.append(
-                    item["translation"]
-                )
-
-        text = ". ".join(parts)
+    # --------------------------------------------------------
+    # STAGE 2
+    # --------------------------------------------------------
 
     elif stage == 2:
 
-        parts = []
+        english = (
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}."
+        )
 
-        for item in words:
+        russian = (
+            f"{translation}. "
+            f"{translation}. "
+            f"{translation}."
+        )
 
-            sentence = make_sentence(
-                item["word"]
-            )
-
-            for _ in range(5):
-
-                parts.append(
-                    item["word"]
-                )
-
-                parts.append(
-                    item["translation"]
-                )
-
-                parts.append(
-                    sentence
-                )
-
-        text = ". ".join(parts)
+    # --------------------------------------------------------
+    # STAGE 3
+    # --------------------------------------------------------
 
     elif stage == 3:
 
-        parts = [
-            "Recall.",
-            "Listen carefully.",
-            "Try to remember the meaning."
-        ]
+        english = (
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}."
+        )
 
-        for item in words:
+        russian = (
+            f"{translation}."
+        )
 
-            for _ in range(5):
-
-                parts.append(
-                    item["word"]
-                )
-
-            parts.append(
-                item["translation"]
-            )
-
-        text = " ".join(parts)
+    # --------------------------------------------------------
+    # STAGE 4
+    # --------------------------------------------------------
 
     elif stage == 4:
 
-        parts = [
-            "Creative repetition."
-        ]
+        english = (
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}. "
+            f"{sentence}. "
+            f"{word}."
+        )
 
-        for item in words:
+        russian = (
+            f"{translation}. "
+            f"{translation}. "
+            f"{translation}."
+        )
 
-            sentence = make_sentence(
-                item["word"]
-            )
-
-            for _ in range(5):
-
-                parts.append(
-                    sentence
-                )
-
-                parts.append(
-                    item["word"]
-                )
-
-        text = " ".join(parts)
+    # --------------------------------------------------------
+    # STAGE 5
+    # --------------------------------------------------------
 
     else:
 
-        parts = [
-            "Final test."
-        ]
+        english = (
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}. "
+            f"{word}."
+        )
 
-        for item in words:
+        russian = (
+            f"{translation}."
+        )
 
-            for _ in range(5):
+    return english, russian
 
-                parts.append(
-                    item["word"]
-                )
 
-            parts.append(
-                item["translation"]
+# ============================================================
+# CREATE AUDIO
+# ============================================================
+
+def make_audio(
+    words,
+    stage
+):
+
+    print()
+    print("==============================")
+    print("CREATING AUDIO")
+    print("==============================")
+
+    temporary_files = []
+
+    for index, item in enumerate(words):
+
+        print()
+        print(
+            f"WORD {index + 1}:",
+            item["word"]
+        )
+
+        english_text, russian_text = (
+            build_audio_text(
+                item,
+                stage
+            )
+        )
+
+        english_file = (
+            f"english_{index}.mp3"
+        )
+
+        russian_file = (
+            f"russian_{index}.mp3"
+        )
+
+        # ----------------------------------------------------
+        # ENGLISH
+        # ----------------------------------------------------
+
+        ok = make_voice(
+            english_text,
+            english_file,
+            "en-US-GuyNeural"
+        )
+
+        if not ok:
+
+            raise RuntimeError(
+                "edge-tts не смог создать "
+                f"английское аудио для "
+                f"{item['word']}"
             )
 
-        text = " ".join(parts)
-
-    asyncio.run(
-        make_voice(
-            text,
-            filename
+        temporary_files.append(
+            english_file
         )
+
+        # ----------------------------------------------------
+        # RUSSIAN
+        # ----------------------------------------------------
+
+        ok = make_voice(
+            russian_text,
+            russian_file,
+            "ru-RU-DmitryNeural"
+        )
+
+        if not ok:
+
+            raise RuntimeError(
+                "edge-tts не смог создать "
+                f"русское аудио для "
+                f"{item['word']}"
+            )
+
+        temporary_files.append(
+            russian_file
+        )
+
+    # ========================================================
+    # FFMPEG LIST
+    # ========================================================
+
+    list_file = "audio_list.txt"
+
+    with open(
+        list_file,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        for filename in temporary_files:
+
+            absolute = os.path.abspath(
+                filename
+            )
+
+            f.write(
+                "file '"
+                + absolute.replace(
+                    "'",
+                    "'\\''"
+                )
+                + "'\n"
+            )
+
+    # ========================================================
+    # JOIN
+    # ========================================================
+
+    print()
+    print("Joining audio with ffmpeg...")
+
+    command = [
+
+        "ffmpeg",
+
+        "-y",
+
+        "-f",
+        "concat",
+
+        "-safe",
+        "0",
+
+        "-i",
+        list_file,
+
+        "-c:a",
+        "libmp3lame",
+
+        "-b:a",
+        "128k",
+
+        AUDIO_FILE
+    ]
+
+    result = subprocess.run(
+        command,
+        capture_output=True,
+        text=True
     )
 
-    return filename
+    if result.returncode != 0:
+
+        print(result.stderr)
+
+        raise RuntimeError(
+            "Ошибка ffmpeg"
+        )
+
+    if not os.path.exists(
+        AUDIO_FILE
+    ):
+
+        raise RuntimeError(
+            "ffmpeg не создал lesson.mp3"
+        )
+
+    size = os.path.getsize(
+        AUDIO_FILE
+    )
+
+    if size < 1000:
+
+        raise RuntimeError(
+            "lesson.mp3 получился пустым"
+        )
+
+    print()
+    print(
+        "AUDIO CREATED:",
+        size,
+        "bytes"
+    )
+
+    return AUDIO_FILE
 
 
-def send_text(words, stage):
+# ============================================================
+# TELEGRAM TEXT
+# ============================================================
+
+def send_lesson_text(
+    words,
+    stage
+):
 
     if stage == 1:
 
@@ -355,6 +660,11 @@ def send_text(words, stage):
                 f"🧠 {item['association']}\n"
             )
 
+        body += (
+            "\n🎧 Сначала представь картинку."
+            "\nПотом слушай."
+        )
+
     elif stage == 2:
 
         title = "🔄 ПОВТОРЕНИЕ №2"
@@ -366,6 +676,7 @@ def send_text(words, stage):
             body += (
                 f"\n{item['word']}\n"
                 f"👉 {make_sentence(item['word'])}\n"
+                f"🇷🇺 {item['translation']}\n"
             )
 
     elif stage == 3:
@@ -373,8 +684,9 @@ def send_text(words, stage):
         title = "🧠 RECALL"
 
         body = (
-            "\nСначала услышь слово."
-            "\nПопробуй вспомнить перевод."
+            "\nСначала услышь английское слово.\n"
+            "Попробуй вспомнить перевод сам.\n"
+            "Не подглядывай."
         )
 
     elif stage == 4:
@@ -382,8 +694,9 @@ def send_text(words, stage):
         title = "🔄 ТВОРЧЕСКОЕ ПОВТОРЕНИЕ"
 
         body = (
-            "\nСлушай фразы."
-            "\nУзнавай знакомые слова."
+            "\nСмотрим на знакомые слова "
+            "с другой стороны.\n"
+            "Слушай фразы и узнавай слова."
         )
 
     else:
@@ -391,35 +704,40 @@ def send_text(words, stage):
         title = "🎓 ФИНАЛЬНАЯ ПРОВЕРКА"
 
         body = (
-            "\nПопробуй вспомнить"
-            "\nвсе три слова самостоятельно."
+            "\nНе подглядывай.\n"
+            "Попробуй самостоятельно "
+            "вспомнить все три слова."
         )
 
-    telegram(
-        "sendMessage",
-        {
-            "chat_id": CHAT_ID,
-            "text":
-                "🇬🇧 ENGLISH RADAR\n\n"
-                + title
-                + "\n"
-                + body
-        }
+    send_message(
+        "🇬🇧 ENGLISH RADAR\n\n"
+        f"{title}\n"
+        f"{body}"
     )
 
 
-def send_audio(filename, stage):
+# ============================================================
+# SEND AUDIO
+# ============================================================
+
+def send_audio(
+    filename,
+    stage
+):
 
     captions = {
 
         1:
-            "🎧 Новые слова + ассоциации + ×10",
+            "🎧 Новые слова + "
+            "ассоциации + повторение ×10",
 
         2:
-            "🎧 Повторение №2",
+            "🎧 Повторение №2 — "
+            "простые фразы",
 
         3:
-            "🎧 RECALL",
+            "🎧 RECALL — "
+            "вспоминаем самостоятельно",
 
         4:
             "🎧 Творческое повторение",
@@ -433,6 +751,9 @@ def send_audio(filename, stage):
         f"bot{TOKEN}/sendAudio"
     )
 
+    print()
+    print("Sending audio to Telegram...")
+
     with open(
         filename,
         "rb"
@@ -444,8 +765,7 @@ def send_audio(filename, stage):
 
             data={
                 "chat_id": CHAT_ID,
-                "caption":
-                    captions[stage]
+                "caption": captions[stage]
             },
 
             files={
@@ -456,33 +776,74 @@ def send_audio(filename, stage):
                 )
             },
 
-            timeout=120
+            timeout=180
         )
 
     print(
-        "AUDIO:",
+        "TELEGRAM AUDIO RESPONSE:"
+    )
+
+    print(
         response.text
     )
 
     response.raise_for_status()
 
+    result = response.json()
+
+    if not result.get("ok"):
+
+        raise RuntimeError(
+            f"Telegram audio error: {result}"
+        )
+
+    print(
+        "AUDIO SENT SUCCESSFULLY"
+    )
+
+
+# ============================================================
+# MAIN
+# ============================================================
 
 def main():
 
-    print(
-        "=== ENGLISH RADAR ==="
-    )
+    now = datetime.now(KYIV)
+
+    print()
+    print("==============================")
+    print("ENGLISH RADAR")
+    print("==============================")
 
     print(
-        "Kyiv:",
-        datetime.now(
-            KYIV
-        ).strftime(
+        "Kyiv time:",
+        now.strftime(
             "%Y-%m-%d %H:%M"
         )
     )
 
+    print(
+        "Chat ID:",
+        CHAT_ID[:4] + "***"
+    )
+
+    # --------------------------------------------------------
+    # WORDS
+    # --------------------------------------------------------
+
     words = get_today_words()
+
+    print(
+        "Today's words:",
+        [
+            item["word"]
+            for item in words
+        ]
+    )
+
+    # --------------------------------------------------------
+    # STAGE
+    # --------------------------------------------------------
 
     stage = get_stage()
 
@@ -491,33 +852,57 @@ def main():
         stage
     )
 
+    # --------------------------------------------------------
+    # TEXT
+    # --------------------------------------------------------
+
     print(
-        "Words:",
-        [
-            item["word"]
-            for item in words
-        ]
+        "Sending lesson text..."
     )
 
-    send_text(
+    send_lesson_text(
         words,
         stage
     )
+
+    print(
+        "Text sent."
+    )
+
+    # --------------------------------------------------------
+    # AUDIO
+    # --------------------------------------------------------
 
     filename = make_audio(
         words,
         stage
     )
 
+    # --------------------------------------------------------
+    # TELEGRAM AUDIO
+    # --------------------------------------------------------
+
     send_audio(
         filename,
         stage
     )
 
-    print(
-        "=== SUCCESS ==="
-    )
+    # --------------------------------------------------------
+    # DONE
+    # --------------------------------------------------------
 
+    print()
+    print("==============================")
+    print(
+        "ENGLISH RADAR SUCCESS"
+    )
+    print("==============================")
+
+
+# ============================================================
+# START
+# ============================================================
 
 if __name__ == "__main__":
-    main()
+
+    main()    
