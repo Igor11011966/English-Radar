@@ -2,106 +2,1497 @@
   {
     "word": "ROAD",
     "translation": "дорога",
-    "association": "РОД идёт по ДОРОГЕ — целый семейный РОД шагает по дороге."
-  },
-  {
-    "word": "SLIPPERY",
-    "translation": "скользкий",
-    "association": "СЛИПЕРИ — представь, что по дороге скользят СЛИПЕРЫ, как по льду."
-  },
-  {
-    "word": "DELAY",
-    "translation": "задержка",
-    "association": "ДЕЛАЙ... но с ЗАДЕРЖКОЙ: сказал «делай», а человек стоит и не делает."
+    "association": "ROAD — дорога"
   },
   {
     "word": "TRUCK",
     "translation": "грузовик",
-    "association": "ТРАК — представь огромный грузовик на ТРАКТОРНОМ пути."
+    "association": "TRUCK — трак, грузовик"
   },
   {
     "word": "DRIVER",
     "translation": "водитель",
-    "association": "ДРАЙВЕР — человек, который ДРАЙВИТ, то есть ведёт машину."
+    "association": "DRIVER — драйвер, тот кто ведёт"
   },
   {
     "word": "STOP",
     "translation": "остановка",
-    "association": "СТОП — красный знак STOP, машина резко остановилась."
+    "association": "STOP — стоп, остановись"
   },
   {
     "word": "TURN",
     "translation": "поворот",
-    "association": "ТЁРН — представь, что водитель ТОРМОЗИТ и делает ПОВОРОТ."
+    "association": "TURN — тёрн, повернуть"
+  },
+  {
+    "word": "LEFT",
+    "translation": "налево",
+    "association": "LEFT — лефт, левая сторона"
+  },
+  {
+    "word": "RIGHT",
+    "translation": "направо",
+    "association": "RIGHT — райт, правая сторона"
+  },
+  {
+    "word": "STRAIGHT",
+    "translation": "прямо",
+    "association": "STRAIGHT — стрейт, прямо"
   },
   {
     "word": "FAST",
     "translation": "быстро",
-    "association": "ФАСТ — представь FAST TRUCK, который мчится очень БЫСТРО."
+    "association": "FAST — фаст, быстро"
   },
   {
     "word": "SLOW",
     "translation": "медленно",
-    "association": "СЛОУ — улитка говорит: «СЛОУ... СЛОУ...» и ползёт МЕДЛЕННО."
+    "association": "SLOW — слоу, медленно"
   },
   {
     "word": "FUEL",
     "translation": "топливо",
-    "association": "ФЬЮЛ — представь, как водитель говорит: «ФЬЮ, Л... где ТОПЛИВО?»"
+    "association": "FUEL — фьюэл, топливо"
   },
   {
-    "word": "ROADWORK",
-    "translation": "дорожные работы",
-    "association": "РОУДВОРК — ROAD плюс WORK: работа прямо на ДОРОГЕ."
+    "word": "DIESEL",
+    "translation": "дизель",
+    "association": "DIESEL — дизель"
+  },
+  {
+    "word": "PETROL",
+    "translation": "бензин",
+    "association": "PETROL — петрэл, бензин"
+  },
+  {
+    "word": "STATION",
+    "translation": "станция",
+    "association": "STATION — стейшн, станция"
+  },
+  {
+    "word": "PARKING",
+    "translation": "парковка",
+    "association": "PARKING — паркинг"
+  },
+  {
+    "word": "PARK",
+    "translation": "парковать",
+    "association": "PARK — парк, припарковать"
+  },
+  {
+    "word": "EXIT",
+    "translation": "выезд",
+    "association": "EXIT — экзит, выход или выезд"
+  },
+  {
+    "word": "ENTRANCE",
+    "translation": "въезд",
+    "association": "ENTRANCE — энтранс, вход или въезд"
+  },
+  {
+    "word": "BRIDGE",
+    "translation": "мост",
+    "association": "BRIDGE — бридж, мост"
+  },
+  {
+    "word": "TUNNEL",
+    "translation": "туннель",
+    "association": "TUNNEL — тунэл, туннель"
+  },
+  {
+    "word": "HIGHWAY",
+    "translation": "шоссе",
+    "association": "HIGHWAY — хайвэй, автомагистраль"
+  },
+  {
+    "word": "MOTORWAY",
+    "translation": "автомагистраль",
+    "association": "MOTORWAY — моторвэй, автомагистраль"
   },
   {
     "word": "TRAFFIC",
-    "translation": "движение, пробка",
-    "association": "ТРАФФИК — представь ТРАКИ в ФИЗИЧЕСКОЙ ПРОБКЕ: движение стоит."
+    "translation": "движение",
+    "association": "TRAFFIC — траффик, дорожное движение"
   },
   {
-    "word": "BRAKE",
-    "translation": "тормоз",
-    "association": "БРЕЙК — BREAK! Нужно сделать перерыв и нажать ТОРМОЗ."
+    "word": "JAM",
+    "translation": "пробка",
+    "association": "JAM — джэм, дорожная пробка"
   },
   {
-    "word": "LEFT",
-    "translation": "лево",
-    "association": "ЛЕФТ — представь табличку LEFT, которая показывает НАЛЕВО."
+    "word": "ACCIDENT",
+    "translation": "авария",
+    "association": "ACCIDENT — эксидент, авария"
   },
   {
-    "word": "RIGHT",
-    "translation": "право",
-    "association": "РАЙТ — представь дорожный знак RIGHT, который показывает НАПРАВО."
+    "word": "DANGER",
+    "translation": "опасность",
+    "association": "DANGER — дэйнджер, опасность"
   },
   {
-    "word": "MORNING",
-    "translation": "утро",
-    "association": "МОРНИНГ — утром водитель говорит: GOOD MORNING!"
+    "word": "CAREFUL",
+    "translation": "осторожный",
+    "association": "CAREFUL — кэрфул, осторожно"
   },
   {
-    "word": "NIGHT",
-    "translation": "ночь",
-    "association": "НАЙТ — NIGHT DRIVE: ночная поездка на грузовике."
+    "word": "SLIPPERY",
+    "translation": "скользкий",
+    "association": "SLIPPERY — слипэри, скользкий"
+  },
+  {
+    "word": "DELAY",
+    "translation": "задержка",
+    "association": "DELAY — дилэй, задержка"
+  },
+  {
+    "word": "WEATHER",
+    "translation": "погода",
+    "association": "WEATHER — уэзэр, погода"
   },
   {
     "word": "RAIN",
     "translation": "дождь",
-    "association": "РЕЙН — представь РЕЙН, который льётся сверху как ДОЖДЬ."
+    "association": "RAIN — рэйн, дождь"
   },
   {
     "word": "SNOW",
     "translation": "снег",
-    "association": "СНОУ — представь СНОУБОРДИСТА в СНЕГУ."
+    "association": "SNOW — сноу, снег"
+  },
+  {
+    "word": "ICE",
+    "translation": "лёд",
+    "association": "ICE — айс, лёд"
+  },
+  {
+    "word": "WIND",
+    "translation": "ветер",
+    "association": "WIND — уинд, ветер"
+  },
+  {
+    "word": "FOG",
+    "translation": "туман",
+    "association": "FOG — фог, туман"
+  },
+  {
+    "word": "MORNING",
+    "translation": "утро",
+    "association": "MORNING — морнинг, утро"
+  },
+  {
+    "word": "EVENING",
+    "translation": "вечер",
+    "association": "EVENING — ивнинг, вечер"
+  },
+  {
+    "word": "TODAY",
+    "translation": "сегодня",
+    "association": "TODAY — тудэй, сегодня"
+  },
+  {
+    "word": "TOMORROW",
+    "translation": "завтра",
+    "association": "TOMORROW — тумороу, завтра"
+  },
+  {
+    "word": "YESTERDAY",
+    "translation": "вчера",
+    "association": "YESTERDAY — естэрдэй, вчера"
+  },
+  {
+    "word": "NOW",
+    "translation": "сейчас",
+    "association": "NOW — нау, сейчас"
+  },
+  {
+    "word": "LATER",
+    "translation": "позже",
+    "association": "LATER — лэйтэр, позже"
+  },
+  {
+    "word": "EARLY",
+    "translation": "рано",
+    "association": "EARLY — ёрли, рано"
+  },
+  {
+    "word": "LATE",
+    "translation": "поздно",
+    "association": "LATE — лэйт, поздно"
+  },
+  {
+    "word": "HERE",
+    "translation": "здесь",
+    "association": "HERE — хир, здесь"
+  },
+  {
+    "word": "THERE",
+    "translation": "там",
+    "association": "THERE — зэр, там"
+  },
+  {
+    "word": "NEAR",
+    "translation": "рядом",
+    "association": "NEAR — нир, близко"
+  },
+  {
+    "word": "FAR",
+    "translation": "далеко",
+    "association": "FAR — фар, далеко"
+  },
+  {
+    "word": "NEAREST",
+    "translation": "ближайший",
+    "association": "NEAREST — нирэст, ближайший"
+  },
+  {
+    "word": "HELLO",
+    "translation": "здравствуйте",
+    "association": "HELLO — хэлоу, приветствие"
+  },
+  {
+    "word": "GOODBYE",
+    "translation": "до свидания",
+    "association": "GOODBYE — гудбай, прощание"
+  },
+  {
+    "word": "PLEASE",
+    "translation": "пожалуйста",
+    "association": "PLEASE — плиз, пожалуйста"
+  },
+  {
+    "word": "THANKS",
+    "translation": "спасибо",
+    "association": "THANKS — сэнкс, спасибо"
+  },
+  {
+    "word": "SORRY",
+    "translation": "извините",
+    "association": "SORRY — сори, извините"
+  },
+  {
+    "word": "YES",
+    "translation": "да",
+    "association": "YES — йес, да"
+  },
+  {
+    "word": "NO",
+    "translation": "нет",
+    "association": "NO — ноу, нет"
+  },
+  {
+    "word": "OKAY",
+    "translation": "хорошо",
+    "association": "OKAY — оукэй, хорошо"
+  },
+  {
+    "word": "WELCOME",
+    "translation": "добро пожаловать",
+    "association": "WELCOME — уэлкам, добро пожаловать"
+  },
+  {
+    "word": "HELP",
+    "translation": "помощь",
+    "association": "HELP — хэлп, помощь"
+  },
+  {
+    "word": "PROBLEM",
+    "translation": "проблема",
+    "association": "PROBLEM — проблем, проблема"
+  },
+  {
+    "word": "QUESTION",
+    "translation": "вопрос",
+    "association": "QUESTION — квэстчн, вопрос"
+  },
+  {
+    "word": "ANSWER",
+    "translation": "ответ",
+    "association": "ANSWER — ансэр, ответ"
+  },
+  {
+    "word": "NAME",
+    "translation": "имя",
+    "association": "NAME — нэйм, имя"
+  },
+  {
+    "word": "FROM",
+    "translation": "из",
+    "association": "FROM — фром, из"
+  },
+  {
+    "word": "COUNTRY",
+    "translation": "страна",
+    "association": "COUNTRY — кантри, страна"
+  },
+  {
+    "word": "UKRAINE",
+    "translation": "Украина",
+    "association": "UKRAINE — Юкрэйн, Украина"
+  },
+  {
+    "word": "ENGLISH",
+    "translation": "английский",
+    "association": "ENGLISH — инглиш, английский"
+  },
+  {
+    "word": "LANGUAGE",
+    "translation": "язык",
+    "association": "LANGUAGE — лэнгвидж, язык"
+  },
+  {
+    "word": "UNDERSTAND",
+    "translation": "понимать",
+    "association": "UNDERSTAND — андэрстэнд, понимать"
+  },
+  {
+    "word": "SPEAK",
+    "translation": "говорить",
+    "association": "SPEAK — спик, говорить"
+  },
+  {
+    "word": "SLOWLY",
+    "translation": "медленно",
+    "association": "SLOWLY — слоули, медленно"
+  },
+  {
+    "word": "REPEAT",
+    "translation": "повторить",
+    "association": "REPEAT — рипит, повторить"
+  },
+  {
+    "word": "AGAIN",
+    "translation": "снова",
+    "association": "AGAIN — эгэн, снова"
+  },
+  {
+    "word": "SHOW",
+    "translation": "показать",
+    "association": "SHOW — шоу, показать"
+  },
+  {
+    "word": "TELL",
+    "translation": "сказать",
+    "association": "TELL — тэл, сказать"
   },
   {
     "word": "WAIT",
     "translation": "ждать",
-    "association": "ВЕЙТ — водитель говорит: «ВЕЙТ, подожди!» и начинает ЖДАТЬ."
+    "association": "WAIT — уэйт, ждать"
+  },
+  {
+    "word": "COME",
+    "translation": "приходить",
+    "association": "COME — кам, приходить"
+  },
+  {
+    "word": "GO",
+    "translation": "идти",
+    "association": "GO — гоу, идти"
+  },
+  {
+    "word": "NEED",
+    "translation": "нуждаться",
+    "association": "NEED — нид, нуждаться"
+  },
+  {
+    "word": "WANT",
+    "translation": "хотеть",
+    "association": "WANT — уонт, хотеть"
+  },
+  {
+    "word": "HAVE",
+    "translation": "иметь",
+    "association": "HAVE — хэв, иметь"
+  },
+  {
+    "word": "CAN",
+    "translation": "мочь",
+    "association": "CAN — кэн, мочь"
+  },
+  {
+    "word": "CANNOT",
+    "translation": "не могу",
+    "association": "CANNOT — кэннот, не могу"
+  },
+  {
+    "word": "KNOW",
+    "translation": "знать",
+    "association": "KNOW — ноу, знать"
+  },
+  {
+    "word": "SEE",
+    "translation": "видеть",
+    "association": "SEE — си, видеть"
+  },
+  {
+    "word": "LOOK",
+    "translation": "смотреть",
+    "association": "LOOK — лук, смотреть"
+  },
+  {
+    "word": "LISTEN",
+    "translation": "слушать",
+    "association": "LISTEN — лисэн, слушать"
+  },
+  {
+    "word": "READ",
+    "translation": "читать",
+    "association": "READ — рид, читать"
+  },
+  {
+    "word": "WRITE",
+    "translation": "писать",
+    "association": "WRITE — райт, писать"
+  },
+  {
+    "word": "PARKING LOT",
+    "translation": "парковка",
+    "association": "PARKING LOT — парковочная площадка"
+  },
+  {
+    "word": "SPACE",
+    "translation": "место",
+    "association": "SPACE — спэйс, свободное место"
+  },
+  {
+    "word": "FULL",
+    "translation": "полный",
+    "association": "FULL — фул, заполнено"
+  },
+  {
+    "word": "FREE",
+    "translation": "свободный",
+    "association": "FREE — фри, свободно"
+  },
+  {
+    "word": "OPEN",
+    "translation": "открыто",
+    "association": "OPEN — оупэн, открыто"
+  },
+  {
+    "word": "CLOSED",
+    "translation": "закрыто",
+    "association": "CLOSED — клоузд, закрыто"
+  },
+  {
+    "word": "TOILET",
+    "translation": "туалет",
+    "association": "TOILET — тойлет, туалет"
+  },
+  {
+    "word": "SHOWER",
+    "translation": "душ",
+    "association": "SHOWER — шауэр, душ"
+  },
+  {
+    "word": "CAFE",
+    "translation": "кафе",
+    "association": "CAFE — кафэй, кафе"
+  },
+  {
+    "word": "RESTAURANT",
+    "translation": "ресторан",
+    "association": "RESTAURANT — рэстрэ́нт, ресторан"
+  },
+  {
+    "word": "HOTEL",
+    "translation": "гостиница",
+    "association": "HOTEL — хоутэл, гостиница"
+  },
+  {
+    "word": "ROOM",
+    "translation": "комната",
+    "association": "ROOM — рум, комната"
+  },
+  {
+    "word": "KEY",
+    "translation": "ключ",
+    "association": "KEY — ки, ключ"
+  },
+  {
+    "word": "FOOD",
+    "translation": "еда",
+    "association": "FOOD — фуд, еда"
+  },
+  {
+    "word": "WATER",
+    "translation": "вода",
+    "association": "WATER — уотэр, вода"
+  },
+  {
+    "word": "COFFEE",
+    "translation": "кофе",
+    "association": "COFFEE — кофи, кофе"
+  },
+  {
+    "word": "BREAKFAST",
+    "translation": "завтрак",
+    "association": "BREAKFAST — брэкфэст, завтрак"
+  },
+  {
+    "word": "LUNCH",
+    "translation": "обед",
+    "association": "LUNCH — ланч, обед"
+  },
+  {
+    "word": "DINNER",
+    "translation": "ужин",
+    "association": "DINNER — динэр, ужин"
+  },
+  {
+    "word": "BILL",
+    "translation": "счёт",
+    "association": "BILL — бил, счёт"
+  },
+  {
+    "word": "CASH",
+    "translation": "наличные",
+    "association": "CASH — кэш, наличные"
+  },
+  {
+    "word": "CARD",
+    "translation": "карта",
+    "association": "CARD — кард, карта"
+  },
+  {
+    "word": "PRICE",
+    "translation": "цена",
+    "association": "PRICE — прайс, цена"
+  },
+  {
+    "word": "COST",
+    "translation": "стоимость",
+    "association": "COST — кост, стоимость"
+  },
+  {
+    "word": "CHEAP",
+    "translation": "дешёвый",
+    "association": "CHEAP — чип, дешёвый"
+  },
+  {
+    "word": "EXPENSIVE",
+    "translation": "дорогой",
+    "association": "EXPENSIVE — икспэнсив, дорогой"
+  },
+  {
+    "word": "MONEY",
+    "translation": "деньги",
+    "association": "MONEY — мани, деньги"
+  },
+  {
+    "word": "RECEIPT",
+    "translation": "чек",
+    "association": "RECEIPT — рисит, чек"
+  },
+  {
+    "word": "SHOP",
+    "translation": "магазин",
+    "association": "SHOP — шоп, магазин"
+  },
+  {
+    "word": "MARKET",
+    "translation": "рынок",
+    "association": "MARKET — маркет, рынок"
+  },
+  {
+    "word": "FUEL TANK",
+    "translation": "топливный бак",
+    "association": "FUEL TANK — фьюэл тэнк, бак"
+  },
+  {
+    "word": "FULL TANK",
+    "translation": "полный бак",
+    "association": "FULL TANK — фул тэнк, полный бак"
+  },
+  {
+    "word": "LITRE",
+    "translation": "литр",
+    "association": "LITRE — литэр, литр"
+  },
+  {
+    "word": "PRICE PER LITRE",
+    "translation": "цена за литр",
+    "association": "PRICE PER LITRE — прайс пёр литэр"
+  },
+  {
+    "word": "PUMP",
+    "translation": "колонка",
+    "association": "PUMP — памп, топливная колонка"
+  },
+  {
+    "word": "NOZZLE",
+    "translation": "пистолет",
+    "association": "NOZZLE — нозл, топливный пистолет"
+  },
+  {
+    "word": "OIL",
+    "translation": "масло",
+    "association": "OIL — ойл, масло"
+  },
+  {
+    "word": "ENGINE",
+    "translation": "двигатель",
+    "association": "ENGINE — энджин, двигатель"
+  },
+  {
+    "word": "MOTOR",
+    "translation": "мотор",
+    "association": "MOTOR — моутэр, мотор"
+  },
+  {
+    "word": "TYRE",
+    "translation": "шина",
+    "association": "TYRE — тайэр, шина"
+  },
+  {
+    "word": "TIRE",
+    "translation": "шина",
+    "association": "TIRE — тайэр, американский вариант"
+  },
+  {
+    "word": "WHEEL",
+    "translation": "колесо",
+    "association": "WHEEL — уил, колесо"
+  },
+  {
+    "word": "BRAKE",
+    "translation": "тормоз",
+    "association": "BRAKE — брэйк, тормоз"
+  },
+  {
+    "word": "LIGHT",
+    "translation": "свет / фара",
+    "association": "LIGHT — лайт, свет"
+  },
+  {
+    "word": "BATTERY",
+    "translation": "аккумулятор",
+    "association": "BATTERY — бэтэри, аккумулятор"
+  },
+  {
+    "word": "DAMAGE",
+    "translation": "повреждение",
+    "association": "DAMAGE — дэмидж, повреждение"
+  },
+  {
+    "word": "BROKEN",
+    "translation": "сломанный",
+    "association": "BROKEN — броукэн, сломанный"
+  },
+  {
+    "word": "REPAIR",
+    "translation": "ремонтировать",
+    "association": "REPAIR — рипэ́р, ремонтировать"
+  },
+  {
+    "word": "SERVICE",
+    "translation": "сервис",
+    "association": "SERVICE — сёрвис, сервис"
+  },
+  {
+    "word": "MECHANIC",
+    "translation": "механик",
+    "association": "MECHANIC — мэканик, механик"
+  },
+  {
+    "word": "TOOLS",
+    "translation": "инструменты",
+    "association": "TOOLS — тулз, инструменты"
+  },
+  {
+    "word": "SPARE PART",
+    "translation": "запчасть",
+    "association": "SPARE PART — спэр парт, запасная часть"
+  },
+  {
+    "word": "PART",
+    "translation": "деталь",
+    "association": "PART — парт, деталь"
+  },
+  {
+    "word": "CHECK",
+    "translation": "проверять",
+    "association": "CHECK — чек, проверять"
+  },
+  {
+    "word": "TEST",
+    "translation": "тестировать",
+    "association": "TEST — тэст, проверять"
+  },
+  {
+    "word": "CHANGE",
+    "translation": "менять",
+    "association": "CHANGE — чейндж, менять"
+  },
+  {
+    "word": "FIX",
+    "translation": "чинить",
+    "association": "FIX — фикс, чинить"
+  },
+  {
+    "word": "AIR",
+    "translation": "воздух",
+    "association": "AIR — эйр, воздух"
+  },
+  {
+    "word": "PRESSURE",
+    "translation": "давление",
+    "association": "PRESSURE — прэшэр, давление"
+  },
+  {
+    "word": "DOCUMENT",
+    "translation": "документ",
+    "association": "DOCUMENT — докьюмент, документ"
+  },
+  {
+    "word": "PASSPORT",
+    "translation": "паспорт",
+    "association": "PASSPORT — паспорт, паспорт"
+  },
+  {
+    "word": "LICENSE",
+    "translation": "права / лицензия",
+    "association": "LICENSE — лайсэнс, водительские права"
+  },
+  {
+    "word": "DRIVING LICENSE",
+    "translation": "водительские права",
+    "association": "DRIVING LICENSE — права на вождение"
+  },
+  {
+    "word": "REGISTRATION",
+    "translation": "регистрация",
+    "association": "REGISTRATION — рэджистрэйшн, регистрация"
+  },
+  {
+    "word": "INSURANCE",
+    "translation": "страховка",
+    "association": "INSURANCE — иншурэнс, страховка"
+  },
+  {
+    "word": "PAPER",
+    "translation": "бумага / документ",
+    "association": "PAPER — пэйпэр, бумага"
+  },
+  {
+    "word": "SIGN",
+    "translation": "знак",
+    "association": "SIGN — сайн, дорожный знак"
+  },
+  {
+    "word": "TICKET",
+    "translation": "билет / штраф",
+    "association": "TICKET — тикит, билет или штраф"
+  },
+  {
+    "word": "POLICE",
+    "translation": "полиция",
+    "association": "POLICE — полис, полиция"
+  },
+  {
+    "word": "OFFICER",
+    "translation": "офицер / сотрудник",
+    "association": "OFFICER — офисэр, сотрудник"
+  },
+  {
+    "word": "CONTROL",
+    "translation": "контроль",
+    "association": "CONTROL — контрол, контроль"
+  },
+  {
+    "word": "CHECKPOINT",
+    "translation": "контрольный пункт",
+    "association": "CHECKPOINT — чекпойнт, пункт контроля"
+  },
+  {
+    "word": "CUSTOMS",
+    "translation": "таможня",
+    "association": "CUSTOMS — кастэмз, таможня"
+  },
+  {
+    "word": "BORDER",
+    "translation": "граница",
+    "association": "BORDER — бордэр, граница"
+  },
+  {
+    "word": "CROSS",
+    "translation": "пересекать",
+    "association": "CROSS — крос, пересекать"
+  },
+  {
+    "word": "WAITING",
+    "translation": "ожидание",
+    "association": "WAITING — уэйтинг, ожидание"
+  },
+  {
+    "word": "QUEUE",
+    "translation": "очередь",
+    "association": "QUEUE — кью, очередь"
+  },
+  {
+    "word": "LINE",
+    "translation": "очередь / линия",
+    "association": "LINE — лайн, очередь или линия"
+  },
+  {
+    "word": "PERMISSION",
+    "translation": "разрешение",
+    "association": "PERMISSION — пэрмишн, разрешение"
+  },
+  {
+    "word": "ALLOWED",
+    "translation": "разрешено",
+    "association": "ALLOWED — элауд, разрешено"
+  },
+  {
+    "word": "NOT ALLOWED",
+    "translation": "не разрешено",
+    "association": "NOT ALLOWED — нот элауд, запрещено"
+  },
+  {
+    "word": "LOAD",
+    "translation": "грузить",
+    "association": "LOAD — лоуд, загружать"
+  },
+  {
+    "word": "UNLOAD",
+    "translation": "разгружать",
+    "association": "UNLOAD — анлоуд, разгружать"
+  },
+  {
+    "word": "LOADING",
+    "translation": "погрузка",
+    "association": "LOADING — лоудинг, погрузка"
+  },
+  {
+    "word": "UNLOADING",
+    "translation": "разгрузка",
+    "association": "UNLOADING — анлоудинг, разгрузка"
+  },
+  {
+    "word": "CARGO",
+    "translation": "груз",
+    "association": "CARGO — карго, груз"
+  },
+  {
+    "word": "CONTAINER",
+    "translation": "контейнер",
+    "association": "CONTAINER — контэйнэр, контейнер"
+  },
+  {
+    "word": "TRAILER",
+    "translation": "прицеп",
+    "association": "TRAILER — трэйлэр, прицеп"
+  },
+  {
+    "word": "SEMI",
+    "translation": "тягач с полуприцепом",
+    "association": "SEMI — сэми, тягач с полуприцепом"
+  },
+  {
+    "word": "DEPOT",
+    "translation": "терминал / база",
+    "association": "DEPOT — дипоу, база или терминал"
+  },
+  {
+    "word": "WAREHOUSE",
+    "translation": "склад",
+    "association": "WAREHOUSE — уэрхаус, склад"
+  },
+  {
+    "word": "ADDRESS",
+    "translation": "адрес",
+    "association": "ADDRESS — эдрэс, адрес"
+  },
+  {
+    "word": "DELIVERY",
+    "translation": "доставка",
+    "association": "DELIVERY — диливэри, доставка"
+  },
+  {
+    "word": "PICKUP",
+    "translation": "забор груза",
+    "association": "PICKUP — пик-ап, забрать груз"
+  },
+  {
+    "word": "DELIVER",
+    "translation": "доставлять",
+    "association": "DELIVER — диливэр, доставлять"
+  },
+  {
+    "word": "COLLECT",
+    "translation": "забирать",
+    "association": "COLLECT — колэкт, забирать"
+  },
+  {
+    "word": "DRIVE",
+    "translation": "ехать / вести",
+    "association": "DRIVE — драйв, ехать или вести"
   },
   {
     "word": "ARRIVE",
-    "translation": "прибывать, приезжать",
-    "association": "ЭРАЙВ — представь: «Я ПРИЕХАЛ!» — машина ARRIVE."
-  }
-]
+    "translation": "прибывать",
+    "association": "ARRIVE — эрайв, прибывать"
+  },
+  {
+    "word": "LEAVE",
+    "translation": "уезжать",
+    "association": "LEAVE — лив, уезжать"
+  },
+  {
+    "word": "READY",
+    "translation": "готов",
+    "association": "READY — рэди, готов"
+  },
+  {
+    "word": "WAITING TIME",
+    "translation": "время ожидания",
+    "association": "WAITING TIME — уэйтинг тайм"
+  },
+  {
+    "word": "APPOINTMENT",
+    "translation": "назначенное время",
+    "association": "APPOINTMENT — эпойнтмэнт, назначенная встреча"
+  },
+  {
+    "word": "NUMBER",
+    "translation": "номер",
+    "association": "NUMBER — намбэр, номер"
+  },
+  {
+    "word": "PLATE",
+    "translation": "номерной знак",
+    "association": "PLATE — плэйт, номерной знак"
+  },
+  {
+    "word": "TRUCK NUMBER",
+    "translation": "номер грузовика",
+    "association": "TRUCK NUMBER — номер грузовика"
+  },
+  {
+    "word": "CONTAINER NUMBER",
+    "translation": "номер контейнера",
+    "association": "CONTAINER NUMBER — номер контейнера"
+  },
+  {
+    "word": "SEAL",
+    "translation": "пломба",
+    "association": "SEAL — сил, пломба"
+  },
+  {
+    "word": "WEIGHT",
+    "translation": "вес",
+    "association": "WEIGHT — уэйт, вес"
+  },
+  {
+    "word": "HEAVY",
+    "translation": "тяжёлый",
+    "association": "HEAVY — хэви, тяжёлый"
+  },
+  {
+    "word": "LIGHTWEIGHT",
+    "translation": "лёгкий",
+    "association": "LIGHTWEIGHT — лайтвэйт, лёгкий"
+  },
+  {
+    "word": "POLICE CHECK",
+    "translation": "проверка полиции",
+    "association": "POLICE CHECK — проверка полиции"
+  },
+  {
+    "word": "PULL OVER",
+    "translation": "прижаться к обочине",
+    "association": "PULL OVER — пул оувэр, остановиться у края дороги"
+  },
+  {
+    "word": "STOP HERE",
+    "translation": "остановитесь здесь",
+    "association": "STOP HERE — стоп хир, остановитесь здесь"
+  },
+  {
+    "word": "SHOW ME",
+    "translation": "покажите мне",
+    "association": "SHOW ME — шоу ми, покажите мне"
+  },
+  {
+    "word": "YOUR PAPERS",
+    "translation": "ваши документы",
+    "association": "YOUR PAPERS — йор пэйпэрз, ваши документы"
+  },
+  {
+    "word": "WHERE",
+    "translation": "где",
+    "association": "WHERE — уэр, где"
+  },
+  {
+    "word": "WHEN",
+    "translation": "когда",
+    "association": "WHEN — уэн, когда"
+  },
+  {
+    "word": "WHAT",
+    "translation": "что",
+    "association": "WHAT — уот, что"
+  },
+  {
+    "word": "WHO",
+    "translation": "кто",
+    "association": "WHO — ху, кто"
+  },
+  {
+    "word": "WHY",
+    "translation": "почему",
+    "association": "WHY — уай, почему"
+  },
+  {
+    "word": "HOW",
+    "translation": "как",
+    "association": "HOW — хау, как"
+  },
+  {
+    "word": "HOW MUCH",
+    "translation": "сколько",
+    "association": "HOW MUCH — хау мач, сколько"
+  },
+  {
+    "word": "HOW MANY",
+    "translation": "сколько штук",
+    "association": "HOW MANY — хау мэни, сколько"
+  },
+  {
+    "word": "WHICH",
+    "translation": "который / какой",
+    "association": "WHICH — уич, который"
+  },
+  {
+    "word": "CAN YOU",
+    "translation": "можете ли вы",
+    "association": "CAN YOU — кэн ю, можете ли вы"
+  },
+  {
+    "word": "COULD YOU",
+    "translation": "не могли бы вы",
+    "association": "COULD YOU — куд ю, не могли бы вы"
+  },
+  {
+    "word": "I NEED",
+    "translation": "мне нужно",
+    "association": "I NEED — ай нид, мне нужно"
+  },
+  {
+    "word": "I WANT",
+    "translation": "я хочу",
+    "association": "I WANT — ай уонт, я хочу"
+  },
+  {
+    "word": "I HAVE",
+    "translation": "у меня есть",
+    "association": "I HAVE — ай хэв, у меня есть"
+  },
+  {
+    "word": "I DON'T KNOW",
+    "translation": "я не знаю",
+    "association": "I DON'T KNOW — ай доунт ноу"
+  },
+  {
+    "word": "I DON'T UNDERSTAND",
+    "translation": "я не понимаю",
+    "association": "I DON'T UNDERSTAND — ай доунт андэрстэнд"
+  },
+  {
+    "word": "PLEASE WAIT",
+    "translation": "пожалуйста, подождите",
+    "association": "PLEASE WAIT — плиз уэйт"
+  },
+  {
+    "word": "SPEAK SLOWLY",
+    "translation": "говорите медленнее",
+    "association": "SPEAK SLOWLY — спик слоули"
+  },
+  {
+    "word": "SAY AGAIN",
+    "translation": "скажите ещё раз",
+    "association": "SAY AGAIN — сэй эгэн"
+  },
+  {
+    "word": "NO PROBLEM",
+    "translation": "без проблем",
+    "association": "NO PROBLEM — ноу проблем"
+  },
+  {
+    "word": "NO IDEA",
+    "translation": "не знаю",
+    "association": "NO IDEA — ноу айдиа"
+  },
+  {
+    "word": "OF COURSE",
+    "translation": "конечно",
+    "association": "OF COURSE — ов корс, конечно"
+  },
+  {
+    "word": "MAYBE",
+    "translation": "возможно",
+    "association": "MAYBE — мэйби, возможно"
+  },
+  {
+    "word": "EXACTLY",
+    "translation": "точно",
+    "association": "EXACTLY — игзэктли, точно"
+  },
+  {
+    "word": "CORRECT",
+    "translation": "правильно",
+    "association": "CORRECT — корэкт, правильно"
+  },
+  {
+    "word": "AIRPORT",
+    "translation": "аэропорт",
+    "association": "AIRPORT — эйрпорт, аэропорт"
+  },
+  {
+    "word": "AIRCRAFT",
+    "translation": "самолёт",
+    "association": "AIRCRAFT — эйркрафт, воздушное судно"
+  },
+  {
+    "word": "AIRPLANE",
+    "translation": "самолёт",
+    "association": "AIRPLANE — эйрплэйн, самолёт"
+  },
+  {
+    "word": "PILOT",
+    "translation": "пилот",
+    "association": "PILOT — пайлот, пилот"
+  },
+  {
+    "word": "ENGINEER",
+    "translation": "инженер",
+    "association": "ENGINEER — энджинир, инженер"
+  },
+  {
+    "word": "PROPELLER",
+    "translation": "винт",
+    "association": "PROPELLER — пропэлэр, воздушный винт"
+  },
+  {
+    "word": "PARTS",
+    "translation": "запчасти",
+    "association": "PARTS — партс, запчасти"
+  },
+  {
+    "word": "ENGINE PARTS",
+    "translation": "детали двигателя",
+    "association": "ENGINE PARTS — детали двигателя"
+  },
+  {
+    "word": "AIRCRAFT ENGINE",
+    "translation": "авиационный двигатель",
+    "association": "AIRCRAFT ENGINE — авиационный двигатель"
+  },
+  {
+    "word": "USED",
+    "translation": "бывший в употреблении",
+    "association": "USED — юзд, использованный"
+  },
+  {
+    "word": "NEW",
+    "translation": "новый",
+    "association": "NEW — нью, новый"
+  },
+  {
+    "word": "OLD",
+    "translation": "старый",
+    "association": "OLD — оулд, старый"
+  },
+  {
+    "word": "GOOD",
+    "translation": "хороший",
+    "association": "GOOD — гуд, хороший"
+  },
+  {
+    "word": "BAD",
+    "translation": "плохой",
+    "association": "BAD — бэд, плохой"
+  },
+  {
+    "word": "CONDITION",
+    "translation": "состояние",
+    "association": "CONDITION — кондишн, состояние"
+  },
+  {
+    "word": "HOURS",
+    "translation": "часы наработки",
+    "association": "HOURS — ауэрз, часы"
+  },
+  {
+    "word": "RESOURCE",
+    "translation": "ресурс",
+    "association": "RESOURCE — рисорс, ресурс"
+  },
+  {
+    "word": "OFFER",
+    "translation": "предложение",
+    "association": "OFFER — офэр, предложение"
+  },
+  {
+    "word": "BUY",
+    "translation": "покупать",
+    "association": "BUY — бай, покупать"
+  },
+  {
+    "word": "SELL",
+    "translation": "продавать",
+    "association": "SELL — сэл, продавать"
+  },
+  {
+    "word": "SELLER",
+    "translation": "продавец",
+    "association": "SELLER — сэлэр, продавец"
+  },
+  {
+    "word": "BUYER",
+    "translation": "покупатель",
+    "association": "BUYER — байэр, покупатель"
+  },
+  {
+    "word": "PHOTOS",
+    "translation": "фотографии",
+    "association": "PHOTOS — фоутоз, фотографии"
+  },
+  {
+    "word": "VIDEO",
+    "translation": "видео",
+    "association": "VIDEO — видио, видео"
+  },
+  {
+    "word": "SERIAL NUMBER",
+    "translation": "серийный номер",
+    "association": "SERIAL NUMBER — серийный номер"
+  },
+  {
+    "word": "RUN",
+    "translation": "работать / запускать",
+    "association": "RUN — ран, работать или запускать двигатель"
+  },
+  {
+    "word": "START",
+    "translation": "запускать",
+    "association": "START — старт, запускать"
+  },
+  {
+    "word": "STOP ENGINE",
+    "translation": "заглушить двигатель",
+    "association": "STOP ENGINE — стоп энджин"
+  },
+  {
+    "word": "FLIGHT",
+    "translation": "полёт",
+    "association": "FLIGHT — флайт, полёт"
+  },
+  {
+    "word": "FLY",
+    "translation": "летать",
+    "association": "FLY — флай, летать"
+  },
+  {
+    "word": "AIRFIELD",
+    "translation": "аэродром",
+    "association": "AIRFIELD — эйрфилд, аэродром"
+  },
+  {
+    "word": "HANGAR",
+    "translation": "ангар",
+    "association": "HANGAR — хэнгар, ангар"
+  },
+  {
+    "word": "FLIGHT SCHOOL",
+    "translation": "лётная школа",
+    "association": "FLIGHT SCHOOL — лётная школа"
+  },
+  {
+    "word": "AEROCLUB",
+    "translation": "авиаклуб",
+    "association": "AEROCLUB — ээроклаб, авиаклуб"
+  },
+  {
+    "word": "ROTAX",
+    "translation": "Ротакс",
+    "association": "ROTAX — Ротакс, авиационные двигатели"
+  },
+  {
+    "word": "ENGINE NUMBER",
+    "translation": "номер двигателя",
+    "association": "ENGINE NUMBER — номер двигателя"
+  },
+  {
+    "word": "TEST STAND",
+    "translation": "стенд для проверки",
+    "association": "TEST STAND — испытательный стенд"
+  },
+  {
+    "word": "COMPRESSION",
+    "translation": "компрессия",
+    "association": "COMPRESSION — компрэшн, компрессия"
+  },
+  {
+    "word": "LEAK",
+    "translation": "утечка",
+    "association": "LEAK — лик, утечка"
+  },
+  {
+    "word": "OIL PRESSURE",
+    "translation": "давление масла",
+    "association": "OIL PRESSURE — давление масла"
+  },
+  {
+    "word": "TEMPERATURE",
+    "translation": "температура",
+    "association": "TEMPERATURE — тэмпэрэчэр, температура"
+  },
+  {
+    "word": "STARTER",
+    "translation": "стартер",
+    "association": "STARTER — стартер"
+  },
+  {
+    "word": "CARBURETOR",
+    "translation": "карбюратор",
+    "association": "CARBURETOR — карбьюрэйтэр, карбюратор"
+  },
+  {
+    "word": "VALVE",
+    "translation": "клапан",
+    "association": "VALVE — вэлв, клапан"
+  },
+  {
+    "word": "FILTER",
+    "translation": "фильтр",
+    "association": "FILTER — фильтэр, фильтр"
+  },
+  {
+    "word": "SPARK PLUG",
+    "translation": "свеча зажигания",
+    "association": "SPARK PLUG — спарк плаг, свеча"
+  },
+  {
+    "word": "FUEL SYSTEM",
+    "translation": "топливная система",
+    "association": "FUEL SYSTEM — топливная система"
+  },
+  {
+    "word": "COOLING",
+    "translation": "охлаждение",
+    "association": "COOLING — кулинг, охлаждение"
+  },
+  {
+    "word": "SERVICE HISTORY",
+    "translation": "история обслуживания",
+    "association": "SERVICE HISTORY — история обслуживания"
+  },
+  {
+    "word": "LOGBOOK",
+    "translation": "журнал / формуляр",
+    "association": "LOGBOOK — логбук, журнал"
+  },
+  {
+    "word": "MANUAL",
+    "translation": "руководство",
+    "association": "MANUAL — мэньюэл, инструкция"
+  },
+  {
+    "word": "PRICE NEGOTIATION",
+    "translation": "торг",
+    "association": "PRICE NEGOTIATION — переговоры о цене"
+  },
+  {
+    "word": "FINAL PRICE",
+    "translation": "окончательная цена",
+    "association": "FINAL PRICE — финальная цена"
+  },
+  {
+    "word": "SEND PHOTOS",
+    "translation": "пришлите фотографии",
+    "association": "SEND PHOTOS — сэнд фотоз"
+  },
+  {
+    "word": "SEND VIDEO",
+    "translation": "пришлите видео",
+    "association": "SEND VIDEO — сэнд видио"
+  },
+  {
+    "word": "WHERE ARE YOU",
+    "translation": "где вы находитесь",
+    "association": "WHERE ARE YOU — уэр ар ю"
+  },
+  {
+    "word": "CAN I SEE IT",
+    "translation": "могу я это посмотреть",
+    "association": "CAN I SEE IT — кэн ай си ит"
+  },
+  {
+    "word": "CAN I BUY IT",
+    "translation": "могу я это купить",
+    "association": "CAN I BUY IT — кэн ай бай ит"
+  },
+  {
+    "word": "I AM INTERESTED",
+    "translation": "я заинтересован",
+    "association": "I AM INTERESTED — ай эм интрэстид"
+  },
+  {
+    "word": "LET'S TALK",
+    "translation": "давайте поговорим",
+    "association": "LET'S TALK — летс ток"
+  },
+  {
+    "word": "DEAL",
+    "translation": "сделка",
+    "association": "DEAL — дил, сделка"
+  },
+  {
+    "word": "PAYMENT",
+    "translation": "оплата",
+    "association": "PAYMENT — пэймэнт, оплата"
+  },
+  {
+    "word": "BANK",
+    "translation": "банк",
+    "association": "BANK — бэнк, банк"
+  },
+  {
+    "word": "TRANSFER",
+    "translation": "перевод",
+    "association": "TRANSFER — трансфэр, перевод"
+  },
+  {
+    "word": "EURO",
+    "translation": "евро",
+    "association": "EURO — юро, евро"
+  },
+  {
+    "word": "DELIVERY COST",
+    "translation": "стоимость доставки",
+    "association": "DELIVERY COST — стоимость доставки"
+  },
+  {
+    "word": "PICKUP AVAILABLE",
+    "translation": "можно забрать",
+    "association": "PICKUP AVAILABLE — можно забрать"
+  },
+  {
+    "word": "AFTERNOON",
+    "translation": "день",
+    "association": "AFTERNOON — афтэрнун, день"
+  },
+  {
+    "word": "LOCATION",
+    "translation": "местоположение",
+    "association": "LOCATION — лоукэйшн, местоположение"
+  },
+  {
+    "word": "MAP",
+    "translation": "карта",
+    "association": "MAP — мэп, карта"
+  },
+  {
+    "word
