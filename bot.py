@@ -21,9 +21,10 @@ WORDS_FILE = "words.json"
 
 # Первый учебный день
 START_DATE = datetime(
+    START_DATE = datetime(
     2026,
-    8,
-    17,
+    10,
+    25,
     tzinfo=KYIV
 ).date()
 
