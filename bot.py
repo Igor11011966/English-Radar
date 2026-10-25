@@ -138,26 +138,17 @@ def get_today_words():
 # STAGE
 # ============================================================
 
+
 def get_stage():
+    hour = datetime.now(KYIV).hour
 
-    hour = datetime.now(
-        KYIV
-    ).hour
-
-    if hour < 9:
+    if hour == 8:
         return 1
 
-    if hour < 11:
+    if hour == 18:
         return 2
 
-    if hour < 13:
-        return 3
-
-    if hour < 15:
-        return 4
-
-    return 5
-
+    return None
 
 # ============================================================
 # SIMPLE SENTENCES
