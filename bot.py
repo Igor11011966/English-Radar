@@ -20,14 +20,13 @@ KYIV = ZoneInfo("Europe/Kyiv")
 WORDS_FILE = "words.json"
 
 # Первый учебный день
+# Первый учебный день
 START_DATE = datetime(
-    START_DATE = datetime(
     2026,
     10,
     25,
     tzinfo=KYIV
 ).date()
-
 
 # Голоса
 ENGLISH_VOICE = "en-US-GuyNeural"
